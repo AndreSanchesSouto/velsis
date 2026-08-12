@@ -1,11 +1,10 @@
 package br.com.velsis.case_tecnico.web.controller;
 
-
+import br.com.velsis.case_tecnico.application.dto.request.PatchAddressRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.request.PostAddressRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.response.GetAddressResponseDTO;
 import br.com.velsis.case_tecnico.application.dto.response.PostAddressResponseDTO;
 import br.com.velsis.case_tecnico.application.mapper.AddressMapper;
-import br.com.velsis.case_tecnico.application.service.AddressUserApplicationService;
 import br.com.velsis.case_tecnico.domain.service.AddressService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,11 +19,9 @@ import java.util.UUID;
 public class AddressController {
 
     private final AddressService service;
-    private final AddressUserApplicationService addressUserApplicationService;
 
-    public AddressController(AddressService service, AddressUserApplicationService addressUserApplicationService) {
+    public AddressController(AddressService service) {
         this.service = service;
-        this.addressUserApplicationService = addressUserApplicationService;
     }
 
     @PostMapping("user/{userId}")
@@ -32,8 +29,8 @@ public class AddressController {
             @PathVariable UUID userId,
             @Valid @RequestBody PostAddressRequestDTO requestDTO
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                AddressMapper.toPostResponse(this.addressUserApplicationService.addAddressToUser(userId, requestDTO))
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(AddressMapper.toPostResponse(this.service.addAddressToUser(userId, requestDTO))
         );
     }
 
@@ -52,11 +49,38 @@ public class AddressController {
             @PathVariable UUID userId
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.addressUserApplicationService.findAddressesByUserId(userId)
+                this.service.findAddressesByUserId(userId)
                         .stream()
                         .map(AddressMapper::toGetResponse)
                         .toList()
         );
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<GetAddressResponseDTO> findById(
+            @PathVariable UUID id
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(AddressMapper.toGetResponse(this.service.findById(id))
+        );
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<GetAddressResponseDTO> updateAddress(
+            @PathVariable UUID id,
+            @Valid @RequestBody PatchAddressRequestDTO requestDTO
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(AddressMapper.toGetResponse(this.service.updateAddress(id, requestDTO))
+        );
+    }
+
+    @PatchMapping("disable/{id}")
+    public ResponseEntity<Boolean> disableAddress(
+            @PathVariable UUID id
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(this.service.disableAddress(id));
     }
 
 }

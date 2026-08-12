@@ -1,14 +1,17 @@
 package br.com.velsis.case_tecnico.domain.service;
 
+import br.com.velsis.case_tecnico.application.dto.request.PatchUserRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.request.PostUserRequestDTO;
+import br.com.velsis.case_tecnico.application.factory.AddressFactory;
+import br.com.velsis.case_tecnico.domain.entity.AddressEntity;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
 import br.com.velsis.case_tecnico.domain.exception.UserException;
 import br.com.velsis.case_tecnico.application.factory.UserFactory;
 import br.com.velsis.case_tecnico.domain.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,8 +32,8 @@ public class UserService {
         return this.repository.findAll();
     }
 
-    public Optional<UserEntity> findById(UUID userId) {
-        return this.repository.findById(userId);
+    public UserEntity findById(UUID userId) {
+        return this.getUserOrThrow(userId);
     }
 
     public UserEntity getUserOrThrow(UUID userId) {
@@ -38,4 +41,9 @@ public class UserService {
                 .orElseThrow(() -> new UserException("Usuário não encontrado"));
     }
 
+    public UserEntity update(UUID id, PatchUserRequestDTO requestDTO) {
+        final UserEntity target = this.getUserOrThrow(id);
+        final UserEntity updated = UserFactory.update(target, requestDTO);
+        return repository.save(updated);
+    }
 }
