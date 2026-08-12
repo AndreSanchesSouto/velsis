@@ -3,6 +3,8 @@ package br.com.velsis.case_tecnico.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -23,6 +25,9 @@ public class UserEntity {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AddressEntity> addresses = new ArrayList<>();
 
     public UserEntity() {}
 
@@ -56,6 +61,21 @@ public class UserEntity {
 
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public List<AddressEntity> getAddresses() {
+        return addresses;
+    }
+
+    private void setAddresses(List<AddressEntity> addresses) {
+        this.addresses = addresses;
+    }
+
+    public void addAddress(AddressEntity address) {
+        if (address != null) {
+            this.addresses.add(address);
+            address.setUser(this);
+        }
     }
 
     @PrePersist

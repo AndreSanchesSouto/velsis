@@ -1,12 +1,13 @@
 package br.com.velsis.case_tecnico.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record PostAddressRequestDTO(
         @NotBlank(message = "O campo 'street' precisa ser informado")
         String street,
 
-        @NotBlank(message = "O campo 'number' precisa ser informado")
+        @NotNull(message = "O campo 'number' precisa ser informado")
         Integer number,
 
         @NotBlank(message = "O campo 'city' precisa ser informado")

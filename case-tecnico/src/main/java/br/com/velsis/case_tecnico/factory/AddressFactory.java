@@ -5,7 +5,6 @@ import br.com.velsis.case_tecnico.dto.request.PostAddressRequestDTO;
 import br.com.velsis.case_tecnico.entity.AddressEntity;
 import org.springframework.stereotype.Component;
 
-@Component
 public class AddressFactory {
 
     public static AddressEntity create(PostAddressRequestDTO request) {

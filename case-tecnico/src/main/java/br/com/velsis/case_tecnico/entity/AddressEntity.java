@@ -36,6 +36,10 @@ public class AddressEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     public AddressEntity() {}
 
     public UUID getId() {
@@ -100,6 +104,14 @@ public class AddressEntity {
 
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     @PrePersist
