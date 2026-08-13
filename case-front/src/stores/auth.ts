@@ -1,31 +1,70 @@
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import { api } from '../services/api.ts'
 
 export const useAuthStore = defineStore('auth', () => {
-  const token = ref<string | null>(localStorage.getItem('token') || null)
-  const user = ref<any>(null)
+  const token = ref<string | null>(
+    localStorage.getItem('access_token')
+  )
+
+  const user = ref<{
+    name: string
+    email: string
+  } | null>(null)
 
   const isAuthenticated = computed(() => !!token.value)
 
-  async function login(email: string, password: string) {
-    try {
-      const response = await api.post('/auth/login', { email, password })
-      const { token: accessToken, user: userData } = response.data
-      token.value = accessToken
-      user.value = userData
-      localStorage.setItem('token', accessToken)
-      return { success: true }
-    } catch (error: any) {
-      return { success: false, error: error.response?.data?.message || 'Erro ao fazer login' }
+  function login(
+    accessToken: string,
+    authenticatedUser?: {
+      name: string
+      email: string
+    }
+  ) {
+    token.value = accessToken
+
+    localStorage.setItem(
+      'access_token',
+      accessToken
+    )
+
+    if (authenticatedUser) {
+      user.value = authenticatedUser
+
+      localStorage.setItem(
+        'authenticated_user',
+        JSON.stringify(authenticatedUser)
+      )
     }
   }
 
   function logout() {
     token.value = null
     user.value = null
-    localStorage.removeItem('token')
+
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('authenticated_user')
   }
 
-  return { token, user, isAuthenticated, login, logout }
+  function restoreSession() {
+    const storedUser = localStorage.getItem(
+      'authenticated_user'
+    )
+
+    if (storedUser) {
+      try {
+        user.value = JSON.parse(storedUser)
+      } catch {
+        user.value = null
+      }
+    }
+  }
+
+  return {
+    token,
+    user,
+    isAuthenticated,
+    login,
+    logout,
+    restoreSession
+  }
 })

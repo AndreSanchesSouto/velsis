@@ -1,14 +1,75 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import LoginView from '../views/public/LoginView.vue'
+import DashboardView from '../views/private/DashboardView.vue'
+import NotFoundView from '../views/public/NotFoundView.vue'
+import LandingView from '../views/public/LandingView.vue'
+import RegisterView from '../views/public/RegisterView.vue'
+import UserFormView from '../views/private/users/UserFormView.vue'
 
 const routes = [
   {
+    path: '/',
+    name: 'Landing',
+    component: LandingView,
+    meta: {
+      public: true
+    }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: RegisterView,
+    meta: {
+      public: true
+    }
+  },
+  {
     path: '/login',
+    name: 'Login',
     component: LoginView,
     meta: {
       public: true
     }
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: DashboardView,
+    meta: {
+      requiresAuth: true
+    },
+    children: [
+      {
+        path: 'users/new',
+        name: 'NewUser',
+        component: UserFormView,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'users/:id',
+        name: 'ViewUser',
+        component: UserFormView,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'users/:id/edit',
+        name: 'EditUser',
+        component: UserFormView,
+        meta: {
+          requiresAuth: true
+        }
+      }
+    ]
+  }, 
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFoundView,
   }
 ]
 
@@ -18,14 +79,14 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('access_token')
 
   if (to.meta.requiresAuth && !token) {
     return '/login'
   }
 
   if (to.path === '/login' && token) {
-    return '/'
+    return '/dashboard'
   }
 })
 
