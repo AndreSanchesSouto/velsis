@@ -64,7 +64,7 @@
                   </button>
                   <button
                     class="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50"
-                    @click="openEditUser(user.id!)"
+                    @click="openAddresses(user.id!)"
                   >
                     Endereços
                   </button>
@@ -80,19 +80,25 @@
 </template>
 
 <script setup lang="ts">
-  import { useRouter } from 'vue-router'
+  import { useRoute, useRouter } from 'vue-router'
   import { useAuthStore } from '../../stores/auth.ts'
   import { userService, type User } from '../../services/users.ts'
-  import { onMounted, ref } from 'vue'
+  import { onMounted, ref, watch } from 'vue'
 
   const router = useRouter()
   const authStore = useAuthStore()
-
+  const route = useRoute()
   const users = ref<User[]>([])
 
-  onMounted(async () => {
-    users.value = await userService.list()
+  onMounted(loadUsers)
+
+  watch(route, () => {
+    loadUsers()
   })
+
+  async function loadUsers() {
+    users.value = await userService.list()
+  }
 
   function handleLogout() {
     authStore.logout()
@@ -118,6 +124,13 @@
   function openUser(userId: string) {
     router.push({
       name: 'ViewUser',
+      params: { id: userId }
+    })
+  }
+
+  function openAddresses(userId: string) {
+    router.push({
+      name: 'UserAddresses',
       params: { id: userId }
     })
   }

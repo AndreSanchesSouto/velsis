@@ -71,13 +71,14 @@
 
 <script setup lang="ts">
   import { computed, onMounted } from 'vue'
-  import { useRoute } from 'vue-router'
+  import { useRoute, useRouter } from 'vue-router'
   import { ref } from 'vue'
   import { userService } from '../../../services/users'
 
   type UserFormMode = 'create' | 'edit' | 'view'
 
   const route = useRoute()
+  const router = useRouter()
   const id = computed(() => route.params.id)
   const name = ref('')
   const role = ref('')
@@ -103,15 +104,25 @@
   })
 
   function close() {
-    window.history.back()
+    router.back()
   }
 
-  function handleSubmit(event: Event) {
+  async function handleSubmit(event: Event) {
     event.preventDefault()
     if (mode.value === 'create') {
-      userService.create({ name: name.value, role: role.value })
+      await userService
+        .create({ 
+          name: name.value,
+          role: role.value 
+        })
+        .then(() => { close() })
     } else if (mode.value === 'edit') {
-      userService.update(id.value as string, { name: name.value, role: role.value })
+      await userService
+        .update(
+          id.value as string, 
+          { name: name.value, role: role.value }
+        )
+        .then(() => { close() })
     }
   }
 </script>

@@ -6,6 +6,8 @@ import NotFoundView from '../views/public/NotFoundView.vue'
 import LandingView from '../views/public/LandingView.vue'
 import RegisterView from '../views/public/RegisterView.vue'
 import UserFormView from '../views/private/users/UserFormView.vue'
+import AddressFormView from '../views/private/addresses/AddressFormView.vue'
+import AddressesView from '../views/private/addresses/AddressView.vue'
 
 const routes = [
   {
@@ -60,6 +62,38 @@ const routes = [
         path: 'users/:id/edit',
         name: 'EditUser',
         component: UserFormView,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'users/:id/addresses',
+        name: 'UserAddresses',
+        component: AddressesView,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'users/:id/addresses/new',
+        name: 'NewUserAddress',
+        component: AddressFormView,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'users/:id/addresses/:addressId/edit',
+        name: 'EditUserAddress',
+        component: AddressFormView,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'users/:id/addresses/:addressId',
+        name: 'ViewUserAddress',
+        component: AddressFormView,
         meta: {
           requiresAuth: true
         }
