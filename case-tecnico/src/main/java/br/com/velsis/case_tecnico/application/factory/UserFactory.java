@@ -3,6 +3,7 @@ package br.com.velsis.case_tecnico.application.factory;
 import br.com.velsis.case_tecnico.application.builder.UserBuilder;
 import br.com.velsis.case_tecnico.application.dto.request.PatchAddressRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.request.PatchUserRequestDTO;
+import br.com.velsis.case_tecnico.application.dto.request.PostRegisterRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.request.PostUserRequestDTO;
 import br.com.velsis.case_tecnico.domain.entity.AddressEntity;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
@@ -18,5 +19,14 @@ public class UserFactory {
     public static UserEntity update(UserEntity target, PatchUserRequestDTO requestDTO) {
         if (requestDTO.name() != null) target.setName(requestDTO.name());
         return target;
+    }
+
+    public static UserEntity register(PostRegisterRequestDTO requestDTO) {
+        UserEntity user = new UserBuilder()
+                .name(requestDTO.user().name())
+                .password(requestDTO.authentication().password())
+                .login(requestDTO.authentication().login())
+                .build();
+        return user;
     }
 }

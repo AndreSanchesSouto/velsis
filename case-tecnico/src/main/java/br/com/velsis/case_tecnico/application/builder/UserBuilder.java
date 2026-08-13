@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 public class UserBuilder {
 
     private String name;
+    private String password;
+    private String login;
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
 
@@ -25,12 +27,24 @@ public class UserBuilder {
         return this;
     }
 
+    public UserBuilder password(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public UserBuilder login(String login) {
+        this.login = login;
+        return this;
+    }
+
     public UserEntity build() {
         UserEntity user = new UserEntity();
 
         user.setName(name);
         user.setCreatedAt(createdAt);
         user.setDeletedAt(deletedAt);
+        user.setPassword(password);
+        user.setLogin(login);
 
         return user;
     }

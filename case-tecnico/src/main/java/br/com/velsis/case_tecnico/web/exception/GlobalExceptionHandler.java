@@ -1,5 +1,6 @@
 package br.com.velsis.case_tecnico.web.exception;
 
+import br.com.velsis.case_tecnico.domain.exception.PasswordMismatchException;
 import br.com.velsis.case_tecnico.domain.exception.UserException;
 import br.com.velsis.case_tecnico.web.dto.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserException.class)
     public ResponseEntity<ErrorResponseDTO> handleUserException(
             UserException exception
+    ) {
+        ErrorResponseDTO response = new ErrorResponseDTO(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .badRequest()
+                .body(response);
+    }
+
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<ErrorResponseDTO> handlerPasswordMismatchException(
+            PasswordMismatchException exception
     ) {
         ErrorResponseDTO response = new ErrorResponseDTO(
                 LocalDateTime.now(),

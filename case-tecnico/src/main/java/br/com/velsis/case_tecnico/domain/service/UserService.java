@@ -28,6 +28,10 @@ public class UserService {
         return this.repository.save(user);
     }
 
+    public UserEntity register(UserEntity userEntity) {
+        return this.repository.save(userEntity);
+    }
+
     public List<UserEntity> findAll() {
         return this.repository.findAll();
     }
