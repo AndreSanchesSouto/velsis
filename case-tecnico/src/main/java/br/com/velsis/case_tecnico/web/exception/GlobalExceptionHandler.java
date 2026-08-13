@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Bad Request",
-                "Corpo da requisição ausente ou inválido"
+                exception.getMessage()
         );
 
         return ResponseEntity

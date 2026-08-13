@@ -24,10 +24,55 @@
         <h2 class="text-2xl font-semibold text-zinc-900">
           Cadastro de usuários
         </h2>
-        <button class="bg-zinc-900 text-white px-4 py-2 rounded-lg hover:bg-zinc-800 text-sm transition hover:-translate-y-0.5"
-              @click="openNewUser">
+        <button 
+          class="bg-zinc-900 text-white px-4 py-2 rounded-lg hover:bg-zinc-800 text-sm transition hover:-translate-y-0.5"
+          @click="openNewUser"
+        >
           Cadastrar novo usuário
         </button>
+      </div>
+    </section>
+    <section class="mt-10 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="min-w-full border-collapse text-left">
+          <thead class="bg-zinc-50">
+            <tr>
+              <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Nome</th>
+              <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Função</th>
+              <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Data de Criação</th>
+              <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="user in users"
+              :key="user.id"
+              class="border-t border-zinc-200"
+            >
+              <td class="px-4 py-3 text-sm text-zinc-900 hover:text-blue-400 cursor-pointer" @click="openUser(user.id!)">
+                {{ user.name }}
+              </td>
+              <td class="px-4 py-3 text-sm text-zinc-600">{{ user.role }}</td>
+              <td class="px-4 py-3 text-sm text-zinc-600">{{ user.createdAt }}</td>
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-2">
+                  <button
+                    class="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50"
+                    @click="openEditUser(user.id!)"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    class="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50"
+                    @click="openEditUser(user.id!)"
+                  >
+                    Endereços
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
   </main>
@@ -37,9 +82,17 @@
 <script setup lang="ts">
   import { useRouter } from 'vue-router'
   import { useAuthStore } from '../../stores/auth.ts'
+  import { userService, type User } from '../../services/users.ts'
+  import { onMounted, ref } from 'vue'
 
   const router = useRouter()
   const authStore = useAuthStore()
+
+  const users = ref<User[]>([])
+
+  onMounted(async () => {
+    users.value = await userService.list()
+  })
 
   function handleLogout() {
     authStore.logout()
@@ -52,6 +105,20 @@
   function openNewUser() {
     router.push({
       name: 'NewUser'
+    })
+  }
+
+  function openEditUser(userId: string) {
+    router.push({
+      name: 'EditUser',
+      params: { id: userId }
+    })
+  }
+
+  function openUser(userId: string) {
+    router.push({
+      name: 'ViewUser',
+      params: { id: userId }
     })
   }
 </script>

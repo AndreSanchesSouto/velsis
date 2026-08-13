@@ -45,7 +45,8 @@ public class AddressService {
     }
 
     public List<AddressEntity> findAddressesByUserId(UUID userId) {
-        return this.repository.findByUserId(userId);
+        final UserEntity user = this.userService.getUserOrThrow(userId);
+        return this.repository.findByUserId(user.getId());
     }
 
     public AddressEntity getAddressOrThrow(UUID id) {

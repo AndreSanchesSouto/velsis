@@ -111,7 +111,6 @@ async function handleLogin() {
       name: 'Usuário',
       email: email.value
     })
-    console.log('Usuário logado:', authStore.user)
 
     await router.push({
       name: 'Dashboard'
