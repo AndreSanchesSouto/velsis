@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,10 +31,11 @@ public class UserController {
     public ResponseEntity<PostUserResponseDTO> post(
             @Valid
             @RequestBody
-            PostUserRequestDTO requestDTO
+            PostUserRequestDTO requestDTO,
+            Authentication requester
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                UserMapper.toPostResponse(this.service.post(requestDTO))
+                UserMapper.toPostResponse(this.service.post(requestDTO, requester))
         );
     }
 

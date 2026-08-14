@@ -24,7 +24,8 @@
         <h2 class="tex-sm md:text-2xl font-semibold text-zinc-900">
           Cadastro de usuários
         </h2>
-        <button 
+        <button
+          v-if="isAuthorized(null)"
           class="bg-zinc-900 text-white px-4 py-2 rounded-lg hover:bg-zinc-800 text-sm transition hover:-translate-y-0.5"
           @click="openNewUser"
         >
@@ -59,6 +60,7 @@
               <td class="px-4 py-3">
                 <div class="flex items-center gap-2">
                   <button
+                    v-if="isAuthorized(user.id!)"
                     class="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50"
                     @click="openEditUser(user.id!)"
                   >
@@ -85,12 +87,21 @@
   import { useRoute, useRouter } from 'vue-router'
   import { useAuthStore } from '../../stores/auth.ts'
   import { userService, type User } from '../../services/users.ts'
-  import { onMounted, ref, watch } from 'vue'
+  import { computed, onMounted, ref, watch } from 'vue'
 
   const router = useRouter()
   const authStore = useAuthStore()
   const route = useRoute()
   const users = ref<User[]>([])
+
+const isAdmin = computed(() => authStore.user?.role === "ADMIN")
+
+// Função que valida o acesso para cada usuário da lista
+const isAuthorized = (targetUserId: string | null) => {
+  // 1. Se for ADMIN, tem acesso total
+  // 3. Se o ID do usuário da linha for igual ao ID do usuário logado no Pinia
+  return isAdmin.value ? true : targetUserId === authStore.user?.id
+}
 
   onMounted(loadUsers)
 

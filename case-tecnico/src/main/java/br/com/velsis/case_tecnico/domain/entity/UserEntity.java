@@ -116,5 +116,8 @@ public class UserEntity {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
-    
+
+    public boolean isAdmin() {
+        return this.role == Role.ADMIN;
+    }
 }

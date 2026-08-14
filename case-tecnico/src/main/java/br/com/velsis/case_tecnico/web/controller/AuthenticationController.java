@@ -7,6 +7,7 @@ import br.com.velsis.case_tecnico.application.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,16 +22,14 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-    @RequestMapping("login")
+    @PostMapping("login")
     public ResponseEntity<LoginResponseDTO> login(
             @Valid @RequestBody PostAuthenticationRequestDTO requestDTO
     ) {
-        return ResponseEntity.ok(
-                new LoginResponseDTO(authenticationService.login(requestDTO))
-        );
+        return ResponseEntity.ok(authenticationService.login(requestDTO));
     }
 
-    @RequestMapping("register")
+    @PostMapping("register")
     public ResponseEntity<Boolean> register(@Valid @RequestBody PostRegisterRequestDTO requestDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(this.authenticationService.register(requestDTO));
     }

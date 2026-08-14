@@ -3,14 +3,13 @@ import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(null)
-  const user = ref<{ name: string; login: string } | null>(null)
+  const user = ref<{ id: string, role: string } | null>(null)
   const isAuthenticated = computed(() => !!token.value)
   const isSessionRestored = ref(false) // flag para saber se já restaurou
 
-  function login(accessToken: string, authenticatedUser?: { name: string; login: string }) {
+  function login(accessToken: string, authenticatedUser?: { id: string, role: string }) {
     token.value = accessToken
     localStorage.setItem('access_token', accessToken)
-    
     if (authenticatedUser) {
       user.value = authenticatedUser
       localStorage.setItem('authenticated_user', JSON.stringify(authenticatedUser))

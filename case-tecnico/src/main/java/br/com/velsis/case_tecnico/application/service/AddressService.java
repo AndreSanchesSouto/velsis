@@ -28,7 +28,7 @@ public class AddressService {
 
     public AddressEntity post(UserEntity user, PostAddressRequestDTO requestDTO) {
         final AddressEntity address = AddressFactory.create(requestDTO);
-        //ViaCepClient.consultZipcode(address.getZipcode());
+        ViaCepClient.consultZipcode(address.getZipcode());
         user.addAddress(address);
         return this.repository.save(address);
     }
@@ -56,6 +56,7 @@ public class AddressService {
 
     @Transactional
     public AddressEntity updateAddress(UUID id, PatchAddressRequestDTO requestDTO) {
+
         final AddressEntity target = this.getAddressOrThrow(id);
         final AddressEntity updated = AddressFactory.update(target, requestDTO);
         return repository.save(updated);

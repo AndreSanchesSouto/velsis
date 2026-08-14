@@ -10,9 +10,9 @@ export interface Authentication {
 }
 
 export interface AuthenticationLogin {
-  name: string
-  login: string
   token: string
+  id: string
+  role: string
 }
 
 export const authenticationService = {
@@ -41,8 +41,8 @@ export const authenticationService = {
       // Sincroniza automaticamente com o store
       const authStore = useAuthStore()
       authStore.login(data.token, {
-        name: data.name,
-        login: data.login
+        id: data.id,
+        role: data.role
       })
       
       useToastStore().success('Login realizado com sucesso!')

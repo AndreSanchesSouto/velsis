@@ -3,12 +3,15 @@ package br.com.velsis.case_tecnico.application.service;
 import br.com.velsis.case_tecnico.application.dto.request.PatchUserRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.request.PostUserRequestDTO;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
+import br.com.velsis.case_tecnico.domain.enums.Role;
 import br.com.velsis.case_tecnico.domain.exception.UserException;
 import br.com.velsis.case_tecnico.application.factory.UserFactory;
 import br.com.velsis.case_tecnico.domain.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +29,10 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserEntity post(PostUserRequestDTO requestDTO) {
+    public UserEntity post(PostUserRequestDTO requestDTO, Authentication requester) {
+
+
+
         final UserEntity user = UserFactory.create(requestDTO);
         user.setPassword(passwordEncoder.encode(requestDTO.password()));
         return this.register(user);
@@ -50,6 +56,14 @@ public class UserService {
     public UserEntity getUserOrThrow(UUID userId) {
         return this.repository.findById(userId)
                 .orElseThrow(() -> new UserException("Usuário não encontrado"));
+    }
+
+    public UserEntity findByLoginOrThrows(String login) {
+        return this.repository
+                .findByLogin(login)
+                .orElseThrow(() ->
+                    new UserException("Usuário não encontrado")
+                );
     }
 
     public UserEntity update(UUID id, PatchUserRequestDTO requestDTO) {

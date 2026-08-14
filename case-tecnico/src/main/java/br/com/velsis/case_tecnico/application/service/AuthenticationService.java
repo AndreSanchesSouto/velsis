@@ -2,6 +2,7 @@ package br.com.velsis.case_tecnico.application.service;
 
 import br.com.velsis.case_tecnico.application.dto.request.PostAuthenticationRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.request.PostRegisterRequestDTO;
+import br.com.velsis.case_tecnico.application.dto.response.LoginResponseDTO;
 import br.com.velsis.case_tecnico.application.factory.UserFactory;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
 import br.com.velsis.case_tecnico.domain.enums.Role;
@@ -47,7 +48,7 @@ public class AuthenticationService {
         return true;
     }
 
-    public String login(PostAuthenticationRequestDTO requestDTO) {
+    public LoginResponseDTO login(PostAuthenticationRequestDTO requestDTO) {
         try {
             final Authentication authentication =
                     authenticationManager.authenticate(
@@ -58,7 +59,13 @@ public class AuthenticationService {
                     );
             final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             assert userDetails != null;
-            return jwtService.generateToken(userDetails);
+            final UserEntity user = this.userService.findByLoginOrThrows(userDetails.getUsername());
+            return new LoginResponseDTO(
+                    jwtService.generateToken(userDetails),
+                    user.getId(),
+                    user.getRole()
+                );
+
         } catch (BadCredentialsException exception) {
             throw new CredentialsMismatchException(
                     exception.getMessage()

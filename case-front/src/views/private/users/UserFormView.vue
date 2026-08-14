@@ -120,10 +120,12 @@
   const password = ref('')
 
   onMounted(async () => {
-    const user = await userService.findById(id)
-    name.value = user.name
-    login.value = user.login
-    role.value = user.role
+    if(id) {
+      const user = await userService.findById(id)
+      name.value = user.name
+      login.value = user.login
+      role.value = user.role
+    }
   })
 
   const mode = computed<UserFormMode>(() => {

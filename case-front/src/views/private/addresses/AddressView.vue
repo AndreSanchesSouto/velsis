@@ -28,6 +28,7 @@
         </div>
 
         <button
+          v-if="isAuthorized(userId)"
           type="button"
           class="inline-flex items-center justify-center rounded-xl bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800"
           @click="addAddress"
@@ -57,6 +58,7 @@
               </div>
 
               <button
+                v-if="isAuthorized(userId)"
                 type="button"
                 class="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100"
                 @click="$event.stopPropagation(); editAddress(address.id!)"
@@ -90,12 +92,22 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { addressService, type Address } from '../../../services/address'
+import { useAuthStore } from '../../../stores/auth'
 
 const route = useRoute()
 const router = useRouter()
 const addresses = ref<Address[]>([])
 const userId = computed(() => route.params.id).value as string
 const search = ref("")
+const authStore = useAuthStore()
+const isAdmin = computed(() => authStore.user?.role === "ADMIN")
+
+// Função que valida o acesso para cada usuário da lista
+const isAuthorized = (targetUserId: string | null) => {
+  // 1. Se for ADMIN, tem acesso total
+  // 3. Se o ID do usuário da linha for igual ao ID do usuário logado no Pinia
+  return isAdmin.value ? true : targetUserId === authStore.user?.id
+}
 
 onMounted(loadAddresses)
 
