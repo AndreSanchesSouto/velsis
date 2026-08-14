@@ -22,6 +22,13 @@
         >
           Visualizar endereço
         </h1>
+        <button
+          v-if="mode === 'edit'" 
+          class="hover:text-red-400 duration-200 transform-all text-slate-500"
+          @click="handleDelete"
+          >
+          Deletar
+        </button>
       </div>
 
       <form @submit="handleSubmit($event)" class="flex flex-col gap-5">
@@ -151,13 +158,15 @@
 
   
   onMounted(async () => {
-    const address = await addressService.findById(id)
-      street.value = address.street
-      number.value = address.number
-      neighborhood.value = address.neighborhood
-      city.value = address.city
-      state.value = address.state
-      zipcode.value = address.zipcode
+    if (id) {
+      const address = await addressService.findById(id)
+        street.value = address.street
+        number.value = address.number
+        neighborhood.value = address.neighborhood
+        city.value = address.city
+        state.value = address.state
+        zipcode.value = address.zipcode
+    }
   })
 
   const mode = computed<AddressFormMode>(() => {
@@ -195,9 +204,7 @@
       neighborhood.value = data.bairro || ''
       city.value = data.localidade || ''
       state.value = data.uf || ''
-    } catch {
-      // silencioso para evitar quebra da interface
-    }
+    } catch { }
   })
 
   function close() {
@@ -238,5 +245,12 @@
         close()
       })
     }
+  }
+
+  async function handleDelete() {
+    await addressService.remove(id)
+      .then(() => {
+        close()
+      })
   }
 </script>

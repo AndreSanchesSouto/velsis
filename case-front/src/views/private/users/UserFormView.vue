@@ -23,8 +23,11 @@
         >
           Visualizar usuário
         </h1>
-        <button class="hover:text-red-400 duration-200 transform-all text-slate-500"
-        @click="handleDelete">
+        <button
+          v-if="mode === 'edit'" 
+          class="hover:text-red-400 duration-200 transform-all text-slate-500"
+          @click="handleDelete"
+          >
           Deletar
         </button>
       </div>
@@ -48,6 +51,20 @@
             :readonly="mode === 'view'"
             type="text"
             placeholder="Digite o login"
+            class="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-3.5 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900"
+          />
+        </label>
+
+        <label 
+          v-if="mode === 'create'"
+          class="flex w-full flex-col gap-2 text-sm font-semibold text-zinc-700"
+          >
+          Senha
+          <input
+            v-model="password"
+            :readonly="mode !== 'create'"
+            type="text"
+            placeholder="Digite a login"
             class="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-3.5 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900"
           />
         </label>
@@ -100,6 +117,7 @@
   const name = ref('')
   const login = ref('')
   const role = ref('')
+  const password = ref('')
 
   onMounted(async () => {
     const user = await userService.findById(id)
@@ -131,6 +149,7 @@
         .create({ 
           name: name.value,
           login: login.value,
+          password: password.value,
           role: role.value 
         })
         .then(() => { close() })

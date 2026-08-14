@@ -37,9 +37,11 @@
       </div>
 
       <main class="flex-1 overflow-y-auto p-6">
+        <input type="text" v-model="search" placeholder="Buscar por cidade, rua, bairro ou CEP" class="w-full rounded-xl border border-zinc-300 px-3 py-2 mb-5" />
+        
         <div v-if="addresses.length" class="space-y-4">
           <article
-            v-for="(address, index) in addresses"
+            v-for="(address, index) in filteredAddresses()"
             :key="address.id ?? index"
             class="rounded-2xl border border-zinc-200 hover:border-blue-400 bg-zinc-50 p-5 shadow-sm group cursor-pointer"
             @click="viewAddress(address.id!)"
@@ -65,7 +67,7 @@
 
             <div class="mt-4 space-y-2 text-sm text-zinc-600">
               <p><span class="font-semibold text-zinc-700">Bairro:</span> {{ address.neighborhood }}</p>
-              <p><span class="font-semibold text-zinc-700">Cidade:</span> {{ address.city }} - {{ address.state }}</p>
+              <p><span class="font-semibold text-zinc-700">Cidade:</span> {{ address.city }} - {{ address.uf }}</p>
               <p><span class="font-semibold text-zinc-700">CEP:</span> {{ address.zipcode }}</p>
             </div>
           </article>
@@ -93,6 +95,7 @@ const route = useRoute()
 const router = useRouter()
 const addresses = ref<Address[]>([])
 const userId = computed(() => route.params.id).value as string
+const search = ref("")
 
 onMounted(loadAddresses)
 
@@ -134,4 +137,16 @@ function editAddress(addressId: string) {
     }
   })
 }
+
+function filteredAddresses(): Address[] {
+  const term = search.value.trim().toLowerCase()
+  if (!term) return addresses.value
+  return addresses.value.filter(address =>
+    address.city.toLowerCase().includes(term) ||
+    address.street.toLowerCase().includes(term) ||
+    address.neighborhood?.toLowerCase().includes(term) ||
+    address.zipcode.includes(term)
+  )
+}
+
 </script>

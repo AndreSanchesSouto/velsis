@@ -6,6 +6,7 @@ import br.com.velsis.case_tecnico.domain.entity.AddressEntity;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
 import br.com.velsis.case_tecnico.application.factory.AddressFactory;
 import br.com.velsis.case_tecnico.domain.exception.AddressException;
+import br.com.velsis.case_tecnico.domain.exception.UserException;
 import br.com.velsis.case_tecnico.domain.repository.AddressRepository;
 import br.com.velsis.case_tecnico.infrastructure.external.ViaCepClient;
 import jakarta.transaction.Transactional;
@@ -44,7 +45,7 @@ public class AddressService {
 
     public List<AddressEntity> findAddressesByUserId(UUID userId) {
         final UserEntity user = this.userService.getUserOrThrow(userId);
-        return this.repository.findByUserId(user.getId());
+        return this.repository.findByUserIdAndDeletedAtIsNull(user.getId());
     }
 
     public AddressEntity getAddressOrThrow(UUID id) {
@@ -66,9 +67,11 @@ public class AddressService {
 
     @Transactional
     public Boolean disableAddress(UUID id) {
-        final AddressEntity target = this.getAddressOrThrow(id);
-        target.setDeletedAt(LocalDateTime.now());
-        this.repository.save(target);
+        final AddressEntity address = this.getAddressOrThrow(id);
+        if (address.getDeletedAt() != null) throw new UserException("Endereço já desativado");
+
+        address.setDeletedAt(LocalDateTime.now());
+        this.repository.save(address);
         return true;
     }
 }

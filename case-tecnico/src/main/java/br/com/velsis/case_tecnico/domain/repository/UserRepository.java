@@ -20,8 +20,13 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
         SELECT u
         FROM UserEntity u
         WHERE u.deletedAt IS NULL
+            AND (
+                :search = '' OR
+                    LOWER(u.name) LIKE LOWER(CONCAT('%', :search, '%')) OR
+                    LOWER(u.login) LIKE LOWER(CONCAT('%', :search, '%'))
+            )
     """)
-    Page<UserEntity> findAllActive(Pageable pageable);
+    Page<UserEntity> findAllActive(@Param("search") String search, Pageable pageable);
 
     @Modifying
     @Query("""
@@ -32,4 +37,10 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     """)
     void diableById(@Param("id") UUID id);
 
+    @Query("""
+    SELECT COUNT(u)
+    FROM UserEntity u
+    WHERE u.deletedAt IS NULL
+    """)
+    long getActivesCount();
 }

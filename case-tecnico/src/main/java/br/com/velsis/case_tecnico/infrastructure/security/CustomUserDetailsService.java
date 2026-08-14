@@ -2,6 +2,7 @@ package br.com.velsis.case_tecnico.infrastructure.security;
 
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
 import br.com.velsis.case_tecnico.domain.repository.UserRepository;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
+    @NullMarked
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         UserEntity user = userRepository.findByLogin(username)
@@ -29,6 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .withUsername(user.getLogin())
                 .password(user.getPassword())
                 .roles(user.getRole().name())
+                .disabled(user.getDeletedAt() != null)
                 .build();
     }
 

@@ -18,6 +18,14 @@ public record PostUserRequestDTO(
         )
         String login,
 
+        @NotBlank(message = "O campo 'password' precisa ser enviado")
+        @Size(max = 100, min = 8, message = "O campo 'password' deve estar entre '8' e '50' caracteres")
+        @Pattern(
+                regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[^A-Za-z\\d])\\S+$",
+                message = "A senha deve conter letras, números e caracteres especiais e não pode conter espaços"
+        )
+        String password,
+
         @NotBlank(message = "O campo 'role' precisa ser enviado")
         @Pattern(
                 regexp = "^(USER|ADMIN)$",

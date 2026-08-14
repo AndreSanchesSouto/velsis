@@ -50,9 +50,9 @@ export const addressService = {
     }
   },
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     try {
-      await api.delete(`/addresses/${id}`)
+      await api.patch(`/addresses/disable/${id}`)
       useToastStore().success('Endereço removido com sucesso!')
     } catch (error) {
       useToastStore().error(error)

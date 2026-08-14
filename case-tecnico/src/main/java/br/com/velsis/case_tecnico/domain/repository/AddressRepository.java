@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface AddressRepository extends JpaRepository<AddressEntity, UUID> {
 
-    List<AddressEntity> findByUserId(UUID id);
+    List<AddressEntity> findByUserIdAndDeletedAtIsNull(UUID id);
 }
