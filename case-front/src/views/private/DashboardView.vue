@@ -33,6 +33,43 @@
         </button>
       </div>
     </section>
+    <section class="rounded-2xl border border-zinc-200 bg-white p-3 shadow-sm gap-5 flex items-center mt-3">
+      <label class="font-bold">Prucurar: </label>
+      <input
+        v-model="search"
+        type="text"
+        placeholder="Buscar usuário..."
+        class="w-full md:w-72 rounded-lg border border-zinc-200 px-4 py-2 text-sm outline-none focus:border-zinc-400"
+      />
+      <select
+        v-model="size"
+        class="rounded-xl border border-zinc-200 px-3 py-1"
+      >
+        <option :value="5">5</option>
+        <option :value="10">10</option>
+        <option :value="25">25</option>
+        <option :value="50">50</option>
+        <option :value="100">100</option>
+      </select>
+      <div
+        v-if="totalPages > 1"
+        class="flex items-center justify-center gap-2 p-5"
+      >
+        <button
+          v-for="pageNumber in totalPages"
+          :key="pageNumber"
+          class="h-9 w-9 rounded-lg text-sm font-semibold transition"
+          :class="
+            page === pageNumber - 1
+              ? 'bg-zinc-900 text-white'
+              : 'border border-zinc-200 text-zinc-700 hover:bg-zinc-50'
+          "
+          @click="changePage(pageNumber - 1)"
+        >
+          {{ pageNumber }}
+        </button>
+      </div>
+    </section>
     <section class="mt-10 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
       <div class="overflow-x-auto">
         <table class="min-w-full border-collapse text-left">
@@ -84,67 +121,93 @@
 </template>
 
 <script setup lang="ts">
-  import { useRoute, useRouter } from 'vue-router'
-  import { useAuthStore } from '../../stores/auth.ts'
-  import { userService, type User } from '../../services/users.ts'
-  import { computed, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useAuthStore } from '../../stores/auth.ts'
+import { userService, type User } from '../../services/users.ts'
+import { computed, onMounted, ref, watch } from 'vue'
 
-  const router = useRouter()
-  const authStore = useAuthStore()
-  const route = useRoute()
-  const users = ref<User[]>([])
+const router = useRouter()
+const authStore = useAuthStore()
+const route = useRoute()
+const users = ref<User[]>([])
+const search = ref('')
+const page = ref(0)
+const size = ref(10)
 
-const isAdmin = computed(() => authStore.user?.role === "ADMIN")
+const totalPages = ref(0)
+const isAdmin = computed(() => authStore.user?.role === 'ADMIN')
 
-// Função que valida o acesso para cada usuário da lista
 const isAuthorized = (targetUserId: string | null) => {
-  // 1. Se for ADMIN, tem acesso total
-  // 3. Se o ID do usuário da linha for igual ao ID do usuário logado no Pinia
-  return isAdmin.value ? true : targetUserId === authStore.user?.id
+  return isAdmin.value
+    ? true
+    : targetUserId === authStore.user?.id
 }
 
-  onMounted(loadUsers)
+onMounted(loadUsers)
 
-  watch(route, () => {
-    loadUsers()
+watch(route, () => {
+  loadUsers()
+})
+
+watch(search, () => {
+  page.value = 0
+  loadUsers()
+})
+
+watch(size, () => {
+  page.value = 0
+  loadUsers()
+})
+
+async function loadUsers() {
+  const response = await userService.list(
+    search.value,
+    page.value,
+    size.value
+  )
+
+  users.value = response.content
+  totalPages.value = response.totalPages
+}
+
+function changePage(newPage: number) {
+  page.value = newPage
+  loadUsers()
+}
+
+
+function handleLogout() {
+  authStore.logout()
+
+  router.push({
+    name: 'Landing'
   })
+}
 
-  async function loadUsers() {
-    users.value = await userService.list()
-  }
+function openNewUser() {
+  router.push({
+    name: 'NewUser'
+  })
+}
 
-  function handleLogout() {
-    authStore.logout()
+function openEditUser(userId: string) {
+  router.push({
+    name: 'EditUser',
+    params: { id: userId }
+  })
+}
 
-    router.push({
-      name: 'Landing'
-    })
-  }
+function openUser(userId: string) {
+  router.push({
+    name: 'ViewUser',
+    params: { id: userId }
+  })
+}
 
-  function openNewUser() {
-    router.push({
-      name: 'NewUser'
-    })
-  }
-
-  function openEditUser(userId: string) {
-    router.push({
-      name: 'EditUser',
-      params: { id: userId }
-    })
-  }
-
-  function openUser(userId: string) {
-    router.push({
-      name: 'ViewUser',
-      params: { id: userId }
-    })
-  }
-
-  function openAddresses(userId: string) {
-    router.push({
-      name: 'UserAddresses',
-      params: { id: userId }
-    })
-  }
+function openAddresses(userId: string) {
+  router.push({
+    name: 'UserAddresses',
+    params: { id: userId }
+  })
+}
 </script>

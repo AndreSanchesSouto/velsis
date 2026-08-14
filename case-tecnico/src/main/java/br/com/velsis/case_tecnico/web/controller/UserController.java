@@ -7,6 +7,7 @@ import br.com.velsis.case_tecnico.application.dto.response.PostUserResponseDTO;
 import br.com.velsis.case_tecnico.application.mapper.UserMapper;
 import br.com.velsis.case_tecnico.application.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -31,24 +32,21 @@ public class UserController {
     public ResponseEntity<PostUserResponseDTO> post(
             @Valid
             @RequestBody
-            PostUserRequestDTO requestDTO,
-            Authentication requester
+            PostUserRequestDTO requestDTO
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                UserMapper.toPostResponse(this.service.post(requestDTO, requester))
+                UserMapper.toPostResponse(this.service.post(requestDTO))
         );
     }
 
     @GetMapping
-    public ResponseEntity<List<GetUserResponseDTO>> findAll(
+    public ResponseEntity<Page<GetUserResponseDTO>> findAll(
             @RequestParam(required = false, defaultValue = "") String search,
             @PageableDefault(size = 100) Pageable pageable
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.service.findAllActives(search, pageable)
-                        .stream()
                         .map(UserMapper::toGetResponse)
-                        .toList()
         );
     }
 

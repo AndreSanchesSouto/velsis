@@ -29,10 +29,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserEntity post(PostUserRequestDTO requestDTO, Authentication requester) {
-
-
-
+    public UserEntity post(PostUserRequestDTO requestDTO) {
         final UserEntity user = UserFactory.create(requestDTO);
         user.setPassword(passwordEncoder.encode(requestDTO.password()));
         return this.register(user);

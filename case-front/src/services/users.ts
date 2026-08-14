@@ -10,11 +10,32 @@ export interface User {
   createdAt?: string
 }
 
+export interface UserPage {
+  content: User[]
+  totalPages: number
+  totalElements: number
+  size: number
+  number: number
+  first: boolean
+  last: boolean
+}
+
 export const userService = {
-  async list(): Promise<User[]> {
-    const { data } = await api.get('/users')
-    return data
-  },
+async list(
+  search = '',
+  page = 0,
+  size = 10
+): Promise<UserPage> {
+  const { data } = await api.get('/users', {
+    params: {
+      search,
+      page,
+      size
+    }
+  })
+
+  return data
+},
 
   async findById(id: string): Promise<User> {
     const { data } = await api.get(`/users/${id}`)
