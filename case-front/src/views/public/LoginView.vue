@@ -23,12 +23,12 @@
         @submit.prevent="handleLogin"
       >
         <label class="flex flex-col gap-2 text-sm font-semibold text-zinc-700">
-          E-mail
+          Login
 
           <input
-            v-model="email"
-            type="email"
-            placeholder="seu@email.com"
+            v-model="login"
+            type="text"
+            placeholder="Seu login"
             required
             class="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-3.5 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900"
           />
@@ -45,13 +45,6 @@
             class="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-3.5 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900"
           />
         </label>
-
-        <p
-          v-if="error"
-          class="m-0 text-sm text-red-600"
-        >
-          {{ error }}
-        </p>
 
         <button
           type="submit"
@@ -80,45 +73,30 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { useAuthStore } from '../../stores/auth.ts'
+import { authenticationService, type AuthenticationLogin } from '../../services/authentication.ts'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-const email = ref('')
+const login = ref('')
 const password = ref('')
-const error = ref('')
 
 async function handleLogin() {
-  error.value = ''
+    await authenticationService.login({
+      login: login.value,
+      password: password.value
+    }).then((response: AuthenticationLogin) => {
+      authStore.login(response.token, {
+        name: response.name,
+        login: response.login,
+      })
+      console.log(response)
 
-  try {
-    /*
-     * Aqui futuramente entra:
-     *
-     * const response = await api.post('/auth/login', {
-     *   email: email.value,
-     *   password: password.value
-     * })
-     *
-     * authStore.login(
-     *   response.data.accessToken,
-     *   response.data.user
-     * )
-     */
-
-    // Apenas para testar a navegação.
-    authStore.login('access_token', {
-      name: 'Usuário',
-      email: email.value
     })
 
     await router.push({
       name: 'Dashboard'
     })
 
-  } catch {
-    error.value =
-      'E-mail ou senha inválidos.'
-  }
 }
 </script>

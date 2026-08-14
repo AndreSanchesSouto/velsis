@@ -8,28 +8,36 @@ import br.com.velsis.case_tecnico.domain.entity.UserEntity;
 import br.com.velsis.case_tecnico.domain.enums.Role;
 
 public class UserFactory {
-    public static UserEntity create(PostUserRequestDTO requestDTO) {
+
+    private static Role roleValidator(String roleString) {
         final Role role;
         try {
-            role = Role.valueOf(
-                    requestDTO.role().toUpperCase()
+            role = Role.valueOf(roleString.toUpperCase()
             );
         } catch (IllegalArgumentException exception) {
             throw new IllegalArgumentException(
-                    "Role inválida: " + requestDTO.role()
+                    "Role inválida: " + roleString
             );
         }
+        return role;
+    }
 
-        UserEntity user = new UserBuilder()
+    public static UserEntity create(PostUserRequestDTO requestDTO) {
+        final Role role = roleValidator(requestDTO.role());
+
+        return new UserBuilder()
                 .name(requestDTO.name())
                 .login(requestDTO.login())
                 .role(role)
                 .build();
-        return user;
     }
 
     public static UserEntity update(UserEntity target, PatchUserRequestDTO requestDTO) {
+        final Role role = roleValidator(requestDTO.role());
+
         if (requestDTO.name() != null) target.setName(requestDTO.name());
+        if (requestDTO.role() != null) target.setRole(role);
+        if (requestDTO.login() != null) target.setLogin(requestDTO.login());
         return target;
     }
 

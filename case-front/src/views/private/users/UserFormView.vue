@@ -36,6 +36,17 @@
         </label>
 
         <label class="flex w-full flex-col gap-2 text-sm font-semibold text-zinc-700">
+          Login
+          <input
+            v-model="login"
+            :readonly="mode === 'view'"
+            type="text"
+            placeholder="Digite o login"
+            class="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-3.5 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900"
+          />
+        </label>
+
+        <label class="flex w-full flex-col gap-2 text-sm font-semibold text-zinc-700">
           Função
           <select
             v-model="role"
@@ -43,8 +54,8 @@
             class="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-3.5 text-zinc-900 focus:border-zinc-900"
           >
             <option value="">Selecione</option>
-            <option value="Administrador">Administrador</option>
-            <option value="Usuário">Usuário</option>
+            <option value="ADMIN">Administrador</option>
+            <option value="USER">Usuário</option>
           </select>
         </label>
         <div class="w-full items-center justify-between flex ">
@@ -81,12 +92,14 @@
   const router = useRouter()
   const id = computed(() => route.params.id)
   const name = ref('')
+  const login = ref('')
   const role = ref('')
 
   onMounted(async () => {
     if(id.value && typeof id.value === 'string') {
       const user = await userService.findById(id.value)
       name.value = user.name
+      login.value = user.login
       role.value = user.role
     } 
   })
@@ -113,6 +126,7 @@
       await userService
         .create({ 
           name: name.value,
+          login: login.value,
           role: role.value 
         })
         .then(() => { close() })
@@ -120,7 +134,11 @@
       await userService
         .update(
           id.value as string, 
-          { name: name.value, role: role.value }
+          { 
+            name: name.value,
+            login: login.value,
+            role: role.value
+          }
         )
         .then(() => { close() })
     }

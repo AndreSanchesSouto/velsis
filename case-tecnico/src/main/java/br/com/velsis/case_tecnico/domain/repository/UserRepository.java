@@ -31,4 +31,5 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
           AND a.deletedAt IS NULL
     """)
     void diableById(@Param("id") UUID id);
+
 }

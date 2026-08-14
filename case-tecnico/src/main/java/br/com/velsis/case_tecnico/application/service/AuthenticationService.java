@@ -6,11 +6,13 @@ import br.com.velsis.case_tecnico.application.factory.UserFactory;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
 import br.com.velsis.case_tecnico.domain.enums.Role;
 import br.com.velsis.case_tecnico.domain.exception.CredentialsMismatchException;
+import br.com.velsis.case_tecnico.domain.exception.UserException;
 import br.com.velsis.case_tecnico.infrastructure.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,7 +43,7 @@ public class AuthenticationService {
         final UserEntity user = UserFactory.register(requestDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ADMIN);
-        userService.register(user);
+        this.userService.register(user);
         return true;
     }
 
@@ -55,10 +57,11 @@ public class AuthenticationService {
                             )
                     );
             final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            assert userDetails != null;
             return jwtService.generateToken(userDetails);
         } catch (BadCredentialsException exception) {
             throw new CredentialsMismatchException(
-                    "Login ou senha inválidos"
+                    exception.getMessage()
             );
         }
     }

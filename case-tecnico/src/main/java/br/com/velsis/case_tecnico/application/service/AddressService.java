@@ -27,7 +27,7 @@ public class AddressService {
 
     public AddressEntity post(UserEntity user, PostAddressRequestDTO requestDTO) {
         final AddressEntity address = AddressFactory.create(requestDTO);
-        ViaCepClient.consultZipcode(address.getZipcode());
+        //ViaCepClient.consultZipcode(address.getZipcode());
         user.addAddress(address);
         return this.repository.save(address);
     }

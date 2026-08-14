@@ -35,22 +35,35 @@
         </label>
 
         <label class="flex flex-col gap-2 text-sm font-semibold text-zinc-700">
-          E-mail
+          Usuário
 
           <input
-            v-model="email"
-            type="email"
-            placeholder="seu@email.com"
+            v-model="username"
+            type="text"
+            placeholder="Seu usuário"
             required
             class="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-3.5 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900"
           />
         </label>
+        
+        
 
         <label class="flex flex-col gap-2 text-sm font-semibold text-zinc-700">
           Senha
 
           <input
             v-model="password"
+            type="password"
+            placeholder="••••••••"
+            required
+            class="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-3.5 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900"
+          />
+        </label>
+
+        <label class="flex flex-col gap-2 text-sm font-semibold text-zinc-700">
+          Confirmar senha
+          <input
+            v-model="passwordConfirmation"
             type="password"
             placeholder="••••••••"
             required
@@ -83,23 +96,22 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { authenticationService } from '../../services/authentication'
 
 const router = useRouter()
 
 const name = ref('')
-const email = ref('')
+const username = ref('')
 const password = ref('')
+const passwordConfirmation = ref('')
 
 async function handleRegister() {
-  /*
-   * Aqui entrará a chamada para sua API.
-   *
-   * await api.post('/auth/register', {
-   *   name: name.value,
-   *   email: email.value,
-   *   password: password.value
-   * })
-   */
+  await authenticationService.register({
+    name: name.value,
+    login: username.value,
+    password: password.value,
+    confirmPassword: passwordConfirmation.value
+  })
 
   await router.push({
     name: 'Login'

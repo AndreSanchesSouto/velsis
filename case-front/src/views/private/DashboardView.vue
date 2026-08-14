@@ -38,6 +38,7 @@
           <thead class="bg-zinc-50">
             <tr>
               <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Nome</th>
+              <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Login</th>
               <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Função</th>
               <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Data de Criação</th>
               <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Ações</th>
@@ -52,6 +53,7 @@
               <td class="px-4 py-3 text-sm text-zinc-900 hover:text-blue-400 cursor-pointer" @click="openUser(user.id!)">
                 {{ user.name }}
               </td>
+              <td class="px-4 py-3 text-sm text-zinc-600">{{ user.login }}</td>
               <td class="px-4 py-3 text-sm text-zinc-600">{{ user.role }}</td>
               <td class="px-4 py-3 text-sm text-zinc-600">{{ user.createdAt }}</td>
               <td class="px-4 py-3">

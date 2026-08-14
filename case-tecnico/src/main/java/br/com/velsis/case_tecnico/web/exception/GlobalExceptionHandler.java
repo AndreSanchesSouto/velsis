@@ -3,17 +3,21 @@ package br.com.velsis.case_tecnico.web.exception;
 import br.com.velsis.case_tecnico.domain.exception.CredentialsMismatchException;
 import br.com.velsis.case_tecnico.domain.exception.UserException;
 import br.com.velsis.case_tecnico.web.dto.ErrorResponseDTO;
+import br.com.velsis.case_tecnico.web.dto.ValidationErrorResponseDTO;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -31,23 +35,28 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValid(
+    public ResponseEntity<ValidationErrorResponseDTO> handleMethodArgumentNotValid(
             MethodArgumentNotValidException exception
     ) {
 
-        String errorFields = exception
+        Map<String, List<String>> errorFields = exception
                 .getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(error ->
-                        error.getField() + ": " + error.getDefaultMessage()
-                )
-                .collect(Collectors.joining(", "));
+                .collect(
+                        Collectors.groupingBy(
+                                FieldError::getField,
+                                Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList())
+                        )
+                );
 
-        return buildResponse(
-                HttpStatus.BAD_REQUEST,
-                errorFields,
-                "Requisição incompleta ou inválida"
+        return ResponseEntity.badRequest().body(
+                new ValidationErrorResponseDTO(
+                        LocalDateTime.now(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Requisição Inválida",
+                        errorFields
+                )
         );
     }
 

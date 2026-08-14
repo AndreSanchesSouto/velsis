@@ -9,11 +9,13 @@ import br.com.velsis.case_tecnico.domain.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -70,8 +72,20 @@ public class UserService {
                 .orElseThrow(() -> new UserException("Usuário não encontrado"));
     }
 
+    public Optional<UserEntity> findByLogin(String login) {
+        return this.findByLogin(login);
+    }
+
     public UserEntity update(UUID id, PatchUserRequestDTO requestDTO) {
         final UserEntity target = this.getUserOrThrow(id);
+            this.repository.findByLogin(requestDTO.login())
+                    .ifPresent(user -> {
+                        if(!user.getId().equals(id)) {
+                            throw new UserException("Login já registrado");
+                        }
+                    }
+            );
+
         final UserEntity updated = UserFactory.update(target, requestDTO);
         return repository.save(updated);
     }

@@ -24,7 +24,7 @@ public class UserEntity {
     @Column(nullable = false)
     private Role role;
 
-    @Column(name = "login", nullable = false)
+    @Column(name = "login", nullable = false, unique = true)
     private String login;
 
     @Column(name = "password", nullable = false)
