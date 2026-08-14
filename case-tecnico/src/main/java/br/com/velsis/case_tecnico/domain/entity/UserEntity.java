@@ -1,5 +1,6 @@
 package br.com.velsis.case_tecnico.domain.entity;
 
+import br.com.velsis.case_tecnico.domain.enums.Role;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,10 @@ public class UserEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @Column(name = "login", nullable = false)
     private String login;
@@ -97,6 +102,14 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @PrePersist

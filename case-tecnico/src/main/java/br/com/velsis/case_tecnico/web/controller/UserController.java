@@ -5,8 +5,11 @@ import br.com.velsis.case_tecnico.application.dto.request.PostUserRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.response.GetUserResponseDTO;
 import br.com.velsis.case_tecnico.application.dto.response.PostUserResponseDTO;
 import br.com.velsis.case_tecnico.application.mapper.UserMapper;
-import br.com.velsis.case_tecnico.domain.service.UserService;
+import br.com.velsis.case_tecnico.application.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +39,11 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GetUserResponseDTO>> findAll() {
+    public ResponseEntity<List<GetUserResponseDTO>> findAll(
+            @PageableDefault(size = 100) Pageable pageable
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.service.findAll()
+                this.service.findAllActives(pageable)
                         .stream()
                         .map(UserMapper::toGetResponse)
                         .toList()
@@ -63,5 +68,13 @@ public class UserController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(UserMapper.toGetResponse(this.service.update(id, requestDTO)));
+    }
+
+    @PatchMapping("disable/{id}")
+    public ResponseEntity<Boolean> disableUser(
+            @PathVariable UUID id
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(this.service.disableUser(id));
     }
 }

@@ -3,6 +3,7 @@ package br.com.velsis.case_tecnico.application.mapper;
 import br.com.velsis.case_tecnico.application.dto.response.GetUserResponseDTO;
 import br.com.velsis.case_tecnico.application.dto.response.PostUserResponseDTO;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
+import br.com.velsis.case_tecnico.domain.enums.Role;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +20,8 @@ public class UserMapper {
         return new GetUserResponseDTO(
                 user.getId(),
                 user.getName(),
+                user.getRole(),
+                user.getLogin(),
                 user.getCreatedAt()
         );
     }

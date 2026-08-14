@@ -1,8 +1,7 @@
-package br.com.velsis.case_tecnico.domain.service;
+package br.com.velsis.case_tecnico.application.service;
 
 import br.com.velsis.case_tecnico.application.dto.request.PatchAddressRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.request.PostAddressRequestDTO;
-import br.com.velsis.case_tecnico.application.dto.response.GetAddressResponseDTO;
 import br.com.velsis.case_tecnico.domain.entity.AddressEntity;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
 import br.com.velsis.case_tecnico.application.factory.AddressFactory;
@@ -10,7 +9,6 @@ import br.com.velsis.case_tecnico.domain.exception.AddressException;
 import br.com.velsis.case_tecnico.domain.repository.AddressRepository;
 import br.com.velsis.case_tecnico.infrastructure.external.ViaCepClient;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

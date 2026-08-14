@@ -1,12 +1,14 @@
-package br.com.velsis.case_tecnico.domain.service;
+package br.com.velsis.case_tecnico.application.service;
 
 import br.com.velsis.case_tecnico.application.dto.request.PostAuthenticationRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.request.PostRegisterRequestDTO;
 import br.com.velsis.case_tecnico.application.factory.UserFactory;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
-import br.com.velsis.case_tecnico.domain.exception.PasswordMismatchException;
+import br.com.velsis.case_tecnico.domain.enums.Role;
+import br.com.velsis.case_tecnico.domain.exception.CredentialsMismatchException;
 import br.com.velsis.case_tecnico.infrastructure.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,25 +35,31 @@ public class AuthenticationService {
             !requestDTO.authentication().password()
                 .equals(requestDTO.authentication().confirmPassword())
         ) {
-            throw new PasswordMismatchException("Senhas não coincidem");
+            throw new CredentialsMismatchException("Senhas não coincidem");
         }
 
         final UserEntity user = UserFactory.register(requestDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.ADMIN);
         userService.register(user);
         return true;
     }
 
     public String login(PostAuthenticationRequestDTO requestDTO) {
-        final Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        requestDTO.login(),
-                        requestDTO.password()
-                )
-        );
-        UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
-        String token = jwtService.generateToken(userDetails);
-
-        return token;
+        try {
+            final Authentication authentication =
+                    authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    requestDTO.login(),
+                                    requestDTO.password()
+                            )
+                    );
+            final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return jwtService.generateToken(userDetails);
+        } catch (BadCredentialsException exception) {
+            throw new CredentialsMismatchException(
+                    "Login ou senha inválidos"
+            );
+        }
     }
 }

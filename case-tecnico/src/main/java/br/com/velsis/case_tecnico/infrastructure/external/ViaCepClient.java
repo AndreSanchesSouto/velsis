@@ -1,7 +1,6 @@
 package br.com.velsis.case_tecnico.infrastructure.external;
 
-import br.com.velsis.case_tecnico.application.exception.ZipcodeNotFound;
-import br.com.velsis.case_tecnico.infrastructure.external.dto.GetViaCepAddressResponseDTO;
+import br.com.velsis.case_tecnico.domain.exception.ZipcodeNotFound;
 
 import java.io.IOException;
 import java.net.URI;

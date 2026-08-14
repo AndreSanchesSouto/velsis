@@ -5,7 +5,7 @@ import br.com.velsis.case_tecnico.application.dto.request.PostAddressRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.response.GetAddressResponseDTO;
 import br.com.velsis.case_tecnico.application.dto.response.PostAddressResponseDTO;
 import br.com.velsis.case_tecnico.application.mapper.AddressMapper;
-import br.com.velsis.case_tecnico.domain.service.AddressService;
+import br.com.velsis.case_tecnico.application.service.AddressService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
