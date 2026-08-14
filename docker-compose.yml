@@ -1,0 +1,31 @@
+services:
+  database:
+    image: postgres:17
+    container_name: case-database
+    environment:
+      POSTGRES_DB: case_tecnico
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./case-tecnico
+    container_name: case-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+
+  frontend:
+    build: ./case-front
+    container_name: case-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

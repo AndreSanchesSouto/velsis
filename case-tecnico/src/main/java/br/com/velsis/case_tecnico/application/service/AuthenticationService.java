@@ -67,9 +67,7 @@ public class AuthenticationService {
                 );
 
         } catch (BadCredentialsException exception) {
-            throw new CredentialsMismatchException(
-                    exception.getMessage()
-            );
+            throw new CredentialsMismatchException("Usuário ou senha não encontrados");
         }
     }
 }
