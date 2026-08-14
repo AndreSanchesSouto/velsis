@@ -73,9 +73,10 @@
 
         <button
           type="submit"
-          class="inline-flex min-h-11.5 items-center justify-center rounded-xl bg-zinc-900 px-5 font-semibold text-white transition hover:-translate-y-0.5"
+          :disabled="isLoading"
+          class="inline-flex min-h-11.5 items-center justify-center rounded-xl bg-zinc-900 px-5 font-semibold text-white transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Criar conta
+          {{ isLoading ? 'Criando conta...' : 'Criar conta' }}
         </button>
       </form>
 
@@ -104,17 +105,28 @@ const name = ref('')
 const username = ref('')
 const password = ref('')
 const passwordConfirmation = ref('')
+const isLoading = ref(false)
 
 async function handleRegister() {
-  await authenticationService.register({
-    name: name.value,
-    login: username.value,
-    password: password.value,
-    confirmPassword: passwordConfirmation.value
-  })
+  isLoading.value = true
 
-  await router.push({
-    name: 'Login'
-  })
+  try {
+    await authenticationService.register({
+      name: name.value,
+      login: username.value,
+      password: password.value,
+      confirmPassword: passwordConfirmation.value
+    })
+
+    // Toast de sucesso e redirecionamento
+    setTimeout(() => {
+      router.push({ name: 'Login' })
+    }, 1500)
+
+  } catch {
+    console.error('Erro ao criar conta')
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>

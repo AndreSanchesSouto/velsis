@@ -48,9 +48,10 @@
 
         <button
           type="submit"
-          class="inline-flex min-h-11.5 items-center justify-center rounded-xl bg-zinc-900 px-5 font-semibold text-white transition hover:-translate-y-0.5"
+          :disabled="isLoading"
+          class="inline-flex min-h-11.5 items-center justify-center rounded-xl bg-zinc-900 px-5 font-semibold text-white transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Entrar
+          {{ isLoading ? 'Entrando...' : 'Entrar' }}
         </button>
       </form>
 
@@ -71,32 +72,32 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-
-import { useAuthStore } from '../../stores/auth.ts'
-import { authenticationService, type AuthenticationLogin } from '../../services/authentication.ts'
+import { authenticationService } from '../../services/authentication.ts'
 
 const router = useRouter()
-const authStore = useAuthStore()
 
 const login = ref('')
 const password = ref('')
+const isLoading = ref(false)
 
 async function handleLogin() {
+  isLoading.value = true
+
+  try {
     await authenticationService.login({
       login: login.value,
       password: password.value
-    }).then((response: AuthenticationLogin) => {
-      authStore.login(response.token, {
-        name: response.name,
-        login: response.login,
-      })
-      console.log(response)
-
     })
 
-    await router.push({
-      name: 'Dashboard'
-    })
+    // Toast de sucesso e redirecionamento
+    setTimeout(() => {
+      router.push({ name: 'Dashboard' })
+    }, 1500)
 
+  } catch {
+    console.error('Erro ao fazer login')
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>

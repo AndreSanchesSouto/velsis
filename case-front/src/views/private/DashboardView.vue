@@ -21,7 +21,7 @@
 
     <section class="mt-10">
       <div class="rounded-2xl border border-zinc-200 bg-white p-7 shadow-sm flex items-center justify-between">
-        <h2 class="text-2xl font-semibold text-zinc-900">
+        <h2 class="tex-sm md:text-2xl font-semibold text-zinc-900">
           Cadastro de usuários
         </h2>
         <button 

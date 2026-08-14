@@ -1,6 +1,6 @@
 <template>
-  <section class="absolute inset-0 flex min-h-screen items-center justify-center bg-black/60 p-6">
-    <div class="mx-auto w-full max-w-2xl rounded-[20px] border border-zinc-200 bg-white p-8 sm:p-10">
+  <section class="absolute inset-0 flex min-h-screen items-center justify-center bg-black/60 p-6 overflow-hidden">
+    <div class="mx-auto w-full max-w-2xl rounded-[20px] border border-zinc-200 bg-white p-8 sm:p-10 overflow-y-auto max-h-[90vh]">
       <div class="mb-6 flex items-center justify-between gap-3">
         <h1
           v-if="mode === 'create'"

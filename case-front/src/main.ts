@@ -11,7 +11,7 @@ const pinia = createPinia()
 // 1. Registrar pinia PRIMEIRO
 app.use(pinia)
 
-// 2. Agora sim pode usar o store
+// 2. Restaurar sessão
 const authStore = useAuthStore()
 authStore.restoreSession()
 
@@ -20,6 +20,3 @@ app.use(router)
 
 // 4. Montar a app
 app.mount('#app')
-
-
-

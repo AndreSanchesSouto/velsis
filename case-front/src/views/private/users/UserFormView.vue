@@ -1,27 +1,33 @@
 
 <template>
-  <section class="absolute inset-0 flex min-h-screen items-center justify-center bg-black/60 p-6">
-    <div class="mx-auto w-full max-w-md rounded-[20px] border border-zinc-200 bg-white p-8 sm:p-10">
-      <h1
-        v-if="mode === 'create'"
-        class="mb-6 text-3xl font-bold tracking-tight text-zinc-900"
-      >
-        Cadastrar usuário
-      </h1>
-
-      <h1
-        v-else-if="mode === 'edit'"
-        class="mb-6 text-3xl font-bold tracking-tight text-zinc-900"
-      >
-        Editar usuário
-      </h1>
-
-      <h1
-        v-else
-        class="mb-6 text-3xl font-bold tracking-tight text-zinc-900"
-      >
-        Visualizar usuário
-      </h1>
+  <section class="absolute inset-0 flex min-h-screen items-center justify-center bg-black/60 p-6 overflow-hidden">
+    <div class="mx-auto w-full max-w-md rounded-[20px] border border-zinc-200 bg-white p-8 sm:p-10 overflow-y-auto max-h-[90vh]">
+      <div class="flex w-full justify-between items-center mb-6">
+        <h1
+          v-if="mode === 'create'"
+          class="text-3xl font-bold tracking-tight text-zinc-900"
+        >
+          Cadastrar usuário
+        </h1>
+  
+        <h1
+          v-else-if="mode === 'edit'"
+          class="text-3xl font-bold tracking-tight text-zinc-900"
+        >
+          Editar usuário
+        </h1>
+  
+        <h1
+          v-else
+          class="text-3xl font-bold tracking-tight text-zinc-900"
+        >
+          Visualizar usuário
+        </h1>
+        <button class="hover:text-red-400 duration-200 transform-all text-slate-500"
+        @click="handleDelete">
+          Deletar
+        </button>
+      </div>
 
       <form @submit="handleSubmit($event)" class="flex flex-col gap-5">
         <label class="flex w-full flex-col gap-2 text-sm font-semibold text-zinc-700">
@@ -90,18 +96,16 @@
 
   const route = useRoute()
   const router = useRouter()
-  const id = computed(() => route.params.id)
+  const id = computed(() => route.params.id).value as string
   const name = ref('')
   const login = ref('')
   const role = ref('')
 
   onMounted(async () => {
-    if(id.value && typeof id.value === 'string') {
-      const user = await userService.findById(id.value)
-      name.value = user.name
-      login.value = user.login
-      role.value = user.role
-    } 
+    const user = await userService.findById(id)
+    name.value = user.name
+    login.value = user.login
+    role.value = user.role
   })
 
   const mode = computed<UserFormMode>(() => {
@@ -133,7 +137,7 @@
     } else if (mode.value === 'edit') {
       await userService
         .update(
-          id.value as string, 
+          id, 
           { 
             name: name.value,
             login: login.value,
@@ -142,5 +146,12 @@
         )
         .then(() => { close() })
     }
+  }
+
+  async function handleDelete(event: Event) {
+    event.preventDefault()
+    await userService.remove(id).then(() => {
+      close()
+    })
   }
 </script>

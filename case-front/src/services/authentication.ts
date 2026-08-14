@@ -1,4 +1,5 @@
 import { useAuthStore } from '../stores/auth'
+import { useToastStore } from '../stores/toast'
 import { api } from './api'
 
 export interface Authentication {
@@ -16,27 +17,39 @@ export interface AuthenticationLogin {
 
 export const authenticationService = {
   async register(payload: Authentication): Promise<boolean> {
-    const { data } = await api.post('/authentication/register', {
-      name: payload.name,
-      authentication: {
-        login: payload.login,
-        password: payload.password,
-        confirmPassword: payload.confirmPassword
-      }
-    })
-    return data
+    try {
+      const { data } = await api.post('/authentication/register', {
+        name: payload.name,
+        authentication: {
+          login: payload.login,
+          password: payload.password,
+          confirmPassword: payload.confirmPassword
+        }
+      })
+      useToastStore().success('Cadastro realizado com sucesso!')
+      return data
+    } catch (error) {
+      useToastStore().error(error)
+      throw error
+    }
   },
 
   async login(payload: Partial<Authentication>): Promise<AuthenticationLogin> {
-    const { data } = await api.post<AuthenticationLogin>(`/authentication/login`, payload)
-    
-    // Sincroniza automaticamente com o store
-    const authStore = useAuthStore()
-    authStore.login(data.token, {
-      name: data.name,
-      login: data.login
-    })
-    
-    return data
+    try {
+      const { data } = await api.post<AuthenticationLogin>(`/authentication/login`, payload)
+      
+      // Sincroniza automaticamente com o store
+      const authStore = useAuthStore()
+      authStore.login(data.token, {
+        name: data.name,
+        login: data.login
+      })
+      
+      useToastStore().success('Login realizado com sucesso!')
+      return data
+    } catch (error) {
+      useToastStore().error(error)
+      throw error
+    }
   }
 }

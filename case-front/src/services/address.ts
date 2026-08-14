@@ -1,4 +1,5 @@
 import { api } from './api'
+import { useToastStore } from '../stores/toast'
 
 export interface Address {
   id?: string
@@ -28,16 +29,34 @@ export const addressService = {
   },
 
   async create(userId: string, payload: Address): Promise<Address> {
-    const { data } = await api.post(`/addresses/user/${userId}`, payload)
-    return data
+    try {
+      const { data } = await api.post(`/addresses/user/${userId}`, payload)
+      useToastStore().success('Endereço criado com sucesso!')
+      return data
+    } catch (error) {
+      useToastStore().error(error)
+      throw error
+    }
   },
 
   async update(id: string, payload: Partial<Address>): Promise<Address> {
-    const { data } = await api.patch(`/addresses/${id}`, payload)
-    return data
+    try {
+      const { data } = await api.patch(`/addresses/${id}`, payload)
+      useToastStore().success('Endereço atualizado com sucesso!')
+      return data
+    } catch (error) {
+      useToastStore().error(error)
+      throw error
+    }
   },
 
   async remove(id: number): Promise<void> {
-    await api.delete(`/addresses/${id}`)
+    try {
+      await api.delete(`/addresses/${id}`)
+      useToastStore().success('Endereço removido com sucesso!')
+    } catch (error) {
+      useToastStore().error(error)
+      throw error
+    }
   },
 }

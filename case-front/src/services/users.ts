@@ -1,4 +1,5 @@
 import { api } from './api'
+import { useToastStore } from '../stores/toast'
 
 export interface User {
   id?: string
@@ -21,16 +22,34 @@ export const userService = {
   },
 
   async create(payload: User): Promise<User> {
-    const { data } = await api.post('/users', payload)
-    return data
+    try {
+      const { data } = await api.post('/users', payload)
+      useToastStore().success('Usuário criado com sucesso!')
+      return data
+    } catch (error) {
+      useToastStore().error(error)
+      throw error
+    }
   },
 
   async update(id: string, payload: Partial<User>): Promise<User> {
-    const { data } = await api.patch(`/users/${id}`, payload)
-    return data
+    try {
+      const { data } = await api.patch(`/users/${id}`, payload)
+      useToastStore().success('Usuário atualizado com sucesso!')
+      return data
+    } catch (error) {
+      useToastStore().error(error)
+      throw error
+    }
   },
 
-  async remove(id: number): Promise<void> {
-    await api.delete(`/users/${id}`)
+  async remove(id: string): Promise<void> {
+    try {
+      await api.patch(`/users/disable/${id}`)
+      useToastStore().success('Usuário removido com sucesso!')
+    } catch (error) {
+      useToastStore().error(error)
+      throw error
+    }
   },
 }
