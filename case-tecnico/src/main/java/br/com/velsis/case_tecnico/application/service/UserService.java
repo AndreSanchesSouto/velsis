@@ -3,15 +3,12 @@ package br.com.velsis.case_tecnico.application.service;
 import br.com.velsis.case_tecnico.application.dto.request.PatchUserRequestDTO;
 import br.com.velsis.case_tecnico.application.dto.request.PostUserRequestDTO;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
-import br.com.velsis.case_tecnico.domain.enums.Role;
 import br.com.velsis.case_tecnico.domain.exception.UserException;
 import br.com.velsis.case_tecnico.application.factory.UserFactory;
 import br.com.velsis.case_tecnico.domain.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

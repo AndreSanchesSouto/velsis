@@ -3,6 +3,7 @@ package br.com.velsis.case_tecnico.infrastructure.security;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -45,6 +46,7 @@ public class SecurityConfiguration {
                 // Configura as regras de autorização de rotas
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/authentication/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 
