@@ -1,5 +1,7 @@
 <template>
+  <!-- Renderiza dinamicamente o componente da rota atual -->
   <router-view />
+  <!-- Container global para exibição de notificações/toasts -->
   <ToastContainer />
 </template>
 

@@ -18,6 +18,7 @@
         </p>
       </div>
 
+      <!-- @submit.prevent: Intercepta o envio do form e previne o recarregamento da página -->
       <form
         class="mt-7 flex flex-col gap-5"
         @submit.prevent="handleRegister"
@@ -25,6 +26,7 @@
         <label class="flex flex-col gap-2 text-sm font-semibold text-zinc-700">
           Nome
 
+          <!-- v-model: Vincula o input bidirecionalmente com a ref 'name' -->
           <input
             v-model="name"
             type="text"
@@ -37,6 +39,7 @@
         <label class="flex flex-col gap-2 text-sm font-semibold text-zinc-700">
           Usuário
 
+          <!-- v-model: Vincula o input com a ref 'username' -->
           <input
             v-model="username"
             type="text"
@@ -51,6 +54,7 @@
         <label class="flex flex-col gap-2 text-sm font-semibold text-zinc-700">
           Senha
 
+          <!-- v-model: Vincula o input com a ref 'password' -->
           <input
             v-model="password"
             type="password"
@@ -62,6 +66,8 @@
 
         <label class="flex flex-col gap-2 text-sm font-semibold text-zinc-700">
           Confirmar senha
+          
+          <!-- v-model: Vincula o input com a ref 'passwordConfirmation' -->
           <input
             v-model="passwordConfirmation"
             type="password"
@@ -71,11 +77,13 @@
           />
         </label>
 
+        <!-- :disabled: Desabilita o botão dinamicamente baseado no estado de loading -->
         <button
           type="submit"
           :disabled="isLoading"
           class="inline-flex min-h-11.5 items-center justify-center rounded-xl bg-zinc-900 px-5 font-semibold text-white transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
         >
+          <!-- Interpolação {{ }}: Altera o texto do botão de acordo com o estado reativo -->
           {{ isLoading ? 'Criando conta...' : 'Criar conta' }}
         </button>
       </form>
@@ -101,16 +109,19 @@ import { authenticationService } from '../../services/authentication'
 
 const router = useRouter()
 
+// Estados reativos mapeados para os campos do formulário e controle de fluxo
 const name = ref('')
 const username = ref('')
 const password = ref('')
 const passwordConfirmation = ref('')
 const isLoading = ref(false)
 
+// Lógica de envio e validação do cadastro
 async function handleRegister() {
-  isLoading.value = true
+  isLoading.value = true // Ativa estado de carregamento na interface
 
   try {
+    // Dispara a requisição HTTP passando os valores reativos (.value)
     await authenticationService.register({
       name: name.value,
       login: username.value,
@@ -118,7 +129,7 @@ async function handleRegister() {
       confirmPassword: passwordConfirmation.value
     })
 
-    // Toast de sucesso e redirecionamento
+    // Aguarda o feedback visual antes de redirecionar para a rota de Login
     setTimeout(() => {
       router.push({ name: 'Login' })
     }, 1500)
@@ -126,7 +137,7 @@ async function handleRegister() {
   } catch {
     console.error('Erro ao criar conta')
   } finally {
-    isLoading.value = false
+    isLoading.value = false // Desativa o carregamento independente do sucesso ou erro
   }
 }
 </script>

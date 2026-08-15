@@ -13,21 +13,25 @@ export interface Address {
 }
 
 export const addressService = {
+  // Busca todos os endereços do sistema
   async list(): Promise<Address[]> {
     const { data } = await api.get('/addresses')
     return data
   },
 
+  // Busca um endereço específico pelo ID
   async findById(id: string): Promise<Address> {
     const { data } = await api.get(`/addresses/${id}`)
     return data
   },
 
+  // Lista todos os endereços vinculados a um usuário
   async findByUserId(userId: string): Promise<Address[]> {
     const { data } = await api.get(`/addresses/user/${userId}`)
     return data
   },
 
+  // Cria um novo endereço para o usuário e exibe sucesso
   async create(userId: string, payload: Address): Promise<Address> {
     try {
       const { data } = await api.post(`/addresses/user/${userId}`, payload)
@@ -39,6 +43,7 @@ export const addressService = {
     }
   },
 
+  // Atualiza os dados de um endereço existente e exibe sucesso
   async update(id: string, payload: Partial<Address>): Promise<Address> {
     try {
       const { data } = await api.patch(`/addresses/${id}`, payload)
@@ -50,6 +55,7 @@ export const addressService = {
     }
   },
 
+  // Desativa/remove logicamente o endereço e exibe sucesso
   async remove(id: string): Promise<void> {
     try {
       await api.patch(`/addresses/disable/${id}`)

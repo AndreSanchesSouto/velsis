@@ -28,7 +28,7 @@
         </div>
 
         <button
-          v-if="isAuthorized(userId)"
+          v-if="isAuthorized(userId as string)"
           type="button"
           class="inline-flex items-center justify-center rounded-xl bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800"
           @click="addAddress"
@@ -58,7 +58,7 @@
               </div>
 
               <button
-                v-if="isAuthorized(userId)"
+                v-if="isAuthorized(userId as string)"
                 type="button"
                 class="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100"
                 @click="$event.stopPropagation(); editAddress(address.id!)"
@@ -97,7 +97,7 @@ import { useAuthStore } from '../../../stores/auth'
 const route = useRoute()
 const router = useRouter()
 const addresses = ref<Address[]>([])
-const userId = computed(() => route.params.id).value as string
+const userId = computed(() => route.params.id)
 const search = ref("")
 const authStore = useAuthStore()
 const isAdmin = computed(() => authStore.user?.role === "ADMIN")
@@ -116,7 +116,7 @@ watch(route, () => {
 })
 
 async function loadAddresses() {
-  addresses.value = await addressService.findByUserId(userId)
+  addresses.value = await addressService.findByUserId(userId.value as string)
 }
 
 function closePanel() {
@@ -126,7 +126,7 @@ function closePanel() {
 function addAddress() {
   router.push({
     name: 'NewUserAddress',
-    params: { id: userId }
+    params: { id: userId.value as string }
   })
 }
 
@@ -134,7 +134,7 @@ function viewAddress(addressId: string) {
   router.push({
     name: 'ViewUserAddress',
     params: {
-      id: userId,
+      id: userId.value as string,
       addressId
     }
   })

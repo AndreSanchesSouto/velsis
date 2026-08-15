@@ -113,15 +113,15 @@
 
   const route = useRoute()
   const router = useRouter()
-  const id = computed(() => route.params.id).value as string
+  const id = computed(() => route.params.id)
   const name = ref('')
   const login = ref('')
   const role = ref('')
   const password = ref('')
 
   onMounted(async () => {
-    if(id) {
-      const user = await userService.findById(id)
+    if(id.value) {
+      const user = await userService.findById(id.value as string)
       name.value = user.name
       login.value = user.login
       role.value = user.role
@@ -158,7 +158,7 @@
     } else if (mode.value === 'edit') {
       await userService
         .update(
-          id, 
+          id.value as string, 
           { 
             name: name.value,
             login: login.value,
@@ -171,7 +171,7 @@
 
   async function handleDelete(event: Event) {
     event.preventDefault()
-    await userService.remove(id).then(() => {
+    await userService.remove(id.value as string).then(() => {
       close()
     })
   }

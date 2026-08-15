@@ -18,6 +18,7 @@
         </p>
       </div>
 
+      <!-- @submit.prevent: Intercepta o envio do form e previne o recarregamento da página -->
       <form
         class="mt-7 flex flex-col gap-5"
         @submit.prevent="handleLogin"
@@ -25,6 +26,7 @@
         <label class="flex flex-col gap-2 text-sm font-semibold text-zinc-700">
           Login
 
+          <!-- v-model: Vincula o input bidirecionalmente com a ref 'login' -->
           <input
             v-model="login"
             type="text"
@@ -37,6 +39,7 @@
         <label class="flex flex-col gap-2 text-sm font-semibold text-zinc-700">
           Senha
 
+          <!-- v-model: Vincula o input bidirecionalmente com a ref 'password' -->
           <input
             v-model="password"
             type="password"
@@ -46,11 +49,13 @@
           />
         </label>
 
+        <!-- :disabled: Desabilita o botão dinamicamente baseado no estado de loading -->
         <button
           type="submit"
           :disabled="isLoading"
           class="inline-flex min-h-11.5 items-center justify-center rounded-xl bg-zinc-900 px-5 font-semibold text-white transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
         >
+          <!-- Interpolação {{ }}: Altera o texto do botão de acordo com o estado reativo -->
           {{ isLoading ? 'Entrando...' : 'Entrar' }}
         </button>
       </form>
@@ -76,20 +81,23 @@ import { authenticationService } from '../../services/authentication.ts'
 
 const router = useRouter()
 
+// Estados reativos mapeados para as credenciais e controle de carregamento
 const login = ref('')
 const password = ref('')
 const isLoading = ref(false)
 
+// Lógica de envio e validação da autenticação
 async function handleLogin() {
-  isLoading.value = true
+  isLoading.value = true // Ativa estado de carregamento na interface
 
   try {
+    // Dispara a requisição HTTP passando os valores das referências reativas (.value)
     await authenticationService.login({
       login: login.value,
       password: password.value
     })
 
-    // Toast de sucesso e redirecionamento
+    // Aguarda o feedback visual antes de redirecionar para a Dashboard
     setTimeout(() => {
       router.push({ name: 'Dashboard' })
     }, 1500)
@@ -97,7 +105,7 @@ async function handleLogin() {
   } catch {
     console.error('Erro ao fazer login')
   } finally {
-    isLoading.value = false
+    isLoading.value = false // Desativa o carregamento independente do resultado da requisição
   }
 }
 </script>

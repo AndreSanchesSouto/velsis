@@ -140,8 +140,8 @@
   
   const route = useRoute()
   const router = useRouter()
-  const userId = computed(() => route.params.id).value as string
-  const id = computed(() => route.params.addressId).value as string
+  const userId = computed(() => route.params.id)
+  const id = computed(() => route.params.addressId)
 
   const street = ref('')
   const number = ref('')
@@ -158,8 +158,8 @@
 
   
   onMounted(async () => {
-    if (id) {
-      const address = await addressService.findById(id)
+    if (id.value) {
+      const address = await addressService.findById(id.value as string)
         street.value = address.street
         number.value = address.number
         neighborhood.value = address.neighborhood
@@ -215,7 +215,7 @@
     event.preventDefault()
     if (mode.value === 'create') {
       await addressService.create(
-        userId, 
+        userId.value as string, 
         {
           street: street.value,
           number: number.value,
@@ -231,7 +231,7 @@
 
     } else if(mode.value === 'edit') {
       await addressService.update(
-        id, 
+        id.value as string, 
         {
           street: street.value,
           number: number.value,
@@ -248,7 +248,7 @@
   }
 
   async function handleDelete() {
-    await addressService.remove(id)
+    await addressService.remove(id.value as string)
       .then(() => {
         close()
       })
