@@ -3,6 +3,7 @@ package br.com.velsis.case_tecnico.application.builder;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
 import br.com.velsis.case_tecnico.domain.enums.Role;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -17,6 +18,8 @@ public class UserBuilder {
     private String name;
     private String password;
     private String login;
+    private String document;
+    private LocalDate birthDate;
     private Role role;
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
@@ -46,6 +49,16 @@ public class UserBuilder {
         return this;
     }
 
+    public UserBuilder document(String document) {
+        this.document = document;
+        return this;
+    }
+
+    public UserBuilder birthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+        return this;
+    }
+
     public UserBuilder role(Role role) {
         this.role = role;
         return this;
@@ -60,6 +73,8 @@ public class UserBuilder {
         user.setPassword(password);
         user.setLogin(login);
         user.setRole(role);
+        user.setBirthDate(birthDate);
+        user.setDocument(document);
 
         return user;
     }

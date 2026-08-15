@@ -27,6 +27,8 @@ public class UserMapper {
                 user.getName(),
                 user.getRole(),
                 user.getLogin(),
+                user.getDocument(),
+                user.getBirthDate(),
                 user.getCreatedAt()
         );
     }

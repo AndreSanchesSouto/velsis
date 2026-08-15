@@ -35,6 +35,8 @@ public class UserFactory {
         return new UserBuilder()
                 .name(requestDTO.name())
                 .login(requestDTO.login())
+                .document(requestDTO.document())
+                .birthDate(requestDTO.birthDate())
                 .role(role)
                 .build();
     }
@@ -45,6 +47,8 @@ public class UserFactory {
         if (requestDTO.name() != null) target.setName(requestDTO.name());
         if (requestDTO.role() != null) target.setRole(role);
         if (requestDTO.login() != null) target.setLogin(requestDTO.login());
+        if (requestDTO.birthDate() != null) target.setBirthDate(requestDTO.birthDate());
+        if (requestDTO.document() != null) target.setDocument(requestDTO.document());
         return target;
     }
 

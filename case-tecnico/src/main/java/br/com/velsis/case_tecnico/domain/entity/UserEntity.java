@@ -3,6 +3,7 @@ package br.com.velsis.case_tecnico.domain.entity;
 import br.com.velsis.case_tecnico.domain.enums.Role;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,12 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
+
+    @Column(name = "document", unique = true)
+    private String document;
+
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -118,6 +125,22 @@ public class UserEntity {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getDocument() {
+        return document;
+    }
+
+    public void setDocument(String document) {
+        this.document = document;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
     @PrePersist

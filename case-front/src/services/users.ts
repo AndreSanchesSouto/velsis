@@ -3,23 +3,25 @@ import { useToastStore } from '../stores/toast'
 
 // Interface que define a estrutura de dados de um Usuário no sistema
 export interface User {
-  id?: string          // Opcional pois não existe antes de salvar no banco
+  id?: string         
   name: string
-  role: string         // Perfil de acesso (ex: 'ADMIN', 'USER')
+  role: string         
   login: string
-  password?: string    // Opcional para não expor a senha em listagens
+  password?: string    
   createdAt?: string
+  birthDate?: string
+  document?: string | null
 }
 
 // Interface que define a estrutura de paginação padrão retornada pelo backend
 export interface UserPage {
-  content: User[]      // Lista de usuários da página atual
-  totalPages: number   // Quantidade total de páginas disponíveis
-  totalElements: number // Quantidade total de registros no banco
-  size: number         // Limite de registros por página
-  number: number       // Número da página atual
-  first: boolean       // Indica se é a primeira página
-  last: boolean        // Indica se é a última página
+  content: User[]      
+  totalPages: number   
+  totalElements: number 
+  size: number         
+  number: number      
+  first: boolean       
+  last: boolean     
 }
 
 // Objeto de serviço responsável pelas requisições HTTP da entidade de Usuários

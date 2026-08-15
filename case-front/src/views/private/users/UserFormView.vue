@@ -34,7 +34,7 @@
 
       <form @submit="handleSubmit($event)" class="flex flex-col gap-5">
         <label class="flex w-full flex-col gap-2 text-sm font-semibold text-zinc-700">
-          Nome
+          Nome (*)
           <input
             v-model="name"
             :readonly="mode === 'view'"
@@ -45,7 +45,7 @@
         </label>
 
         <label class="flex w-full flex-col gap-2 text-sm font-semibold text-zinc-700">
-          Login
+          Login (*)
           <input
             v-model="login"
             :readonly="mode === 'view'"
@@ -55,11 +55,37 @@
           />
         </label>
 
+        <label class="flex w-full flex-col gap-2 text-sm font-semibold text-zinc-700">
+          Nascimento
+          <input
+            v-model="birthDate"
+            :readonly="mode === 'view'"
+            type="date"
+            placeholder="Digite o nome"
+            class="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-3.5 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900"
+          />
+        </label>
+
+        <label class="flex w-full flex-col gap-2 text-sm font-semibold text-zinc-700">
+          Documento
+          <input
+            v-model="document"
+            :readonly="mode === 'view'"
+            v-mask="'###.###.###-##'"
+            type="text"
+            inputmode="numeric"
+            maxlength="14"
+            placeholder="CPF"
+            @input="onCpfInput"
+            class="w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-3.5 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900"
+          />
+        </label>
+
         <label 
           v-if="mode === 'create'"
           class="flex w-full flex-col gap-2 text-sm font-semibold text-zinc-700"
           >
-          Senha
+          Senha (*)
           <input
             v-model="password"
             :readonly="mode !== 'create'"
@@ -70,7 +96,7 @@
         </label>
 
         <label class="flex w-full flex-col gap-2 text-sm font-semibold text-zinc-700">
-          Função
+          Função (*)
           <select
             v-model="role"
             :disabled="mode === 'view'"
@@ -117,6 +143,8 @@
   const name = ref('')
   const login = ref('')
   const role = ref('')
+  const birthDate = ref('')
+  const document = ref('')
   const password = ref('')
 
   onMounted(async () => {
@@ -125,8 +153,22 @@
       name.value = user.name
       login.value = user.login
       role.value = user.role
+      birthDate.value = user.birthDate as string
+      document.value = (user.document ?? '')
+        .replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
     }
   })
+
+  function formatDateToBr(date: string) {
+    if (!date) return ''
+
+    const [year, month, day] = date.split('-')
+
+    return `${day}/${month}/${year}`
+  }
 
   const mode = computed<UserFormMode>(() => {
     if (route.name === 'NewUser') {
@@ -152,7 +194,7 @@
           name: name.value,
           login: login.value,
           password: password.value,
-          role: role.value 
+          role: role.value
         })
         .then(() => { close() })
     } else if (mode.value === 'edit') {
@@ -162,7 +204,9 @@
           { 
             name: name.value,
             login: login.value,
-            role: role.value
+            role: role.value,
+            birthDate: formatDateToBr(birthDate.value),
+            document: document.value ? document.value.replace(/\D/g, '') : null
           }
         )
         .then(() => { close() })
@@ -175,4 +219,23 @@
       close()
     })
   }
+
+  function onCpfInput(event: Event) {
+  const input = event.target as HTMLInputElement
+
+  // mantém apenas números
+  let value = input.value.replace(/\D/g, '')
+
+  // limita a 11 dígitos
+  value = value.slice(0, 11)
+
+  // aplica a máscara 000.000.000-00
+  value = value
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+    .replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4')
+
+  document.value = value
+}
+
 </script>

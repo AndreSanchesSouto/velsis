@@ -1,8 +1,10 @@
 package br.com.velsis.case_tecnico.application.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record PostUserRequestDTO(
         @NotBlank(message = "O campo 'name' precisa ser enviado")
@@ -26,10 +28,19 @@ public record PostUserRequestDTO(
         )
         String password,
 
-        @NotBlank(message = "O campo 'role' precisa ser enviado")
         @Pattern(
                 regexp = "^(USER|ADMIN)$",
                 message = "A role deve ser USER ou ADMIN"
         )
-        String role
+        String role,
+
+        @Past(message = "A data de nascimento deve ser uma data passada")
+        @JsonFormat(pattern = "dd/MM/yyyy") // Define o formato esperado na requisição (ex: 15/05/1990)
+        LocalDate birthDate,
+
+        @Pattern(
+                regexp = "^\\d{11}$|^\\d{14}$",
+                message = "O documento deve conter 11 dígitos (CPF) ou 14 dígitos (CNPJ), apenas números"
+        )
+        String document
 ) {}

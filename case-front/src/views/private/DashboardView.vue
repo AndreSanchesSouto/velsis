@@ -86,6 +86,7 @@
             <tr>
               <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Nome</th>
               <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Login</th>
+              <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Documento</th>
               <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Função</th>
               <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Data de Criação</th>
               <th class="px-4 py-3 text-sm font-semibold text-zinc-700">Ações</th>
@@ -103,6 +104,15 @@
                 {{ user.name }}
               </td>
               <td class="px-4 py-3 text-sm text-zinc-600">{{ user.login }}</td>
+              <td class="px-4 py-3 text-sm text-zinc-600">
+              {{
+                user.document
+                  ?.replace(/\D/g, '')
+                  .replace(/(\d{3})(\d)/, '$1.$2')
+                  .replace(/(\d{3})(\d)/, '$1.$2')
+                  .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+              }}
+              </td>              
               <td class="px-4 py-3 text-sm text-zinc-600">{{ user.role }}</td>
               <td class="px-4 py-3 text-sm text-zinc-600">{{ user.createdAt }}</td>
               <td class="px-4 py-3">
