@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
-@Repository
+@Repository // Define a interface como um repositório de dados gerenciado pelo Spring Data JPA
 public interface AddressRepository extends JpaRepository<AddressEntity, UUID> {
 
     List<AddressEntity> findByUserIdAndDeletedAtIsNull(UUID id);

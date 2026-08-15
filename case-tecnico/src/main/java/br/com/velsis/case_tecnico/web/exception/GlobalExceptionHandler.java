@@ -20,7 +20,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+/*
+* Centralização do tratamento de erros da API.
+*
+* Em vez de colocar blocos try-catch em todos os Controllers, deixe que os erros aconteçam.
+* O Spring intercepta os erros automaticamente e os envia para essa classe,
+ * */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

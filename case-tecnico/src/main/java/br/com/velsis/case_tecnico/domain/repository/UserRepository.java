@@ -12,10 +12,15 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
+@Repository // Define a interface como um repositório de dados gerenciado pelo Spring Data JPA
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByLogin(String login);
 
+    /**
+     * Consulta customizada (JPQL) com paginação para buscar usuários ativos.
+     * Filtra registros onde 'deletedAt' é nulo e realiza uma busca parcial (case-insensitive) pelo nome ou login,
+     * ignorando o filtro caso o termo enviado esteja vazio.
+     */
     @Query("""
         SELECT u
         FROM UserEntity u

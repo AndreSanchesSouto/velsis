@@ -5,6 +5,12 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Entidade de domínio que representa a tabela de endereços ("addresses") no banco de dados.
+ * Mapeia os dados de localização (rua, número, cidade, UF, CEP) e estabelece um relacionamento
+ * de muitos para um (ManyToOne) com a entidade de usuários (UserEntity).
+ * Possui suporte para auditoria de criação automática e controle de exclusão lógica (soft delete) pelo campo deletedAt.
+ */
 @Table(name = "addresses")
 @Entity
 public class AddressEntity {

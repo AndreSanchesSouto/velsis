@@ -12,19 +12,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
-
-@RestController
-@RequestMapping("users")
+/*
+ * Aqui está localizado o Controlelr de Users, basicamente ele é o responsável por receber as chamadas
+ * REST e envia essa requisição ao UserService, para que nele seja feito a lógica para responder a chamada.
+ * */
+@RestController // injeta como controller no spring
+@RequestMapping("users") // nome da rota
 public class UserController {
 
     private final UserService service;
 
-    public UserController(UserService service) {
+    public UserController(UserService service) { // inejeção do service
         this.service = service;
     }
 

@@ -5,6 +5,13 @@ import br.com.velsis.case_tecnico.domain.enums.Role;
 
 import java.time.LocalDateTime;
 
+/**
+ * Classe utilitária que implementa o padrão de projeto Builder para a criação fluente
+ * e encapsulada de instâncias da entidade de domínio UserEntity.
+ * Facilita a construção progressiva de objetos de usuário através do encadeamento de métodos,
+ * permitindo a definição clara de credenciais, perfis de acesso (Role) e metadados de ciclo de vida
+ * antes da instanciação final e do armazenamento no banco de dados.
+ */
 public class UserBuilder {
 
     private String name;

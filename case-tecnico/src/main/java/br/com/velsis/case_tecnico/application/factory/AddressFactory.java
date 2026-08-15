@@ -5,6 +5,13 @@ import br.com.velsis.case_tecnico.application.dto.request.PatchAddressRequestDTO
 import br.com.velsis.case_tecnico.application.dto.request.PostAddressRequestDTO;
 import br.com.velsis.case_tecnico.domain.entity.AddressEntity;
 
+/**
+ * Classe de fábrica (Factory) responsável por centralizar a lógica de criação e atualização
+ * de instâncias da entidade de domínio AddressEntity.
+ * Utiliza o padrão Builder para a construção de novos endereços a partir de DTOs de criação (POST)
+ * e implementa regras de atualização parcial (Patch) que aplicam modificações apenas nos campos
+ * não nulos fornecidos na requisição, preservando o estado atual dos demais dados.
+ */
 public class AddressFactory {
 
     public static AddressEntity create(PostAddressRequestDTO request) {

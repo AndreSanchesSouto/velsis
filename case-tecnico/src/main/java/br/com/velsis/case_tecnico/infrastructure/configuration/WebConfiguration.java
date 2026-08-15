@@ -6,7 +6,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
-
+    /**
+     * Configura as regras de CORS (Cross-Origin Resource Sharing) para permitir
+     * que aplicações frontend hospedadas em domínios diferentes consumam esta API.
+     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")

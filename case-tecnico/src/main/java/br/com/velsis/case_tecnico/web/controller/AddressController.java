@@ -14,13 +14,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@RestController
-@RequestMapping("addresses")
+/*
+* Aqui está localizado o Controlelr de Addresses, basicamente ele é o responsável por receber as chamadas
+* REST e envia essa requisição ao AddressesService, para que nele seja feito a lógica para responder a chamada.
+* */
+
+@RestController // injeta como controller no spring
+@RequestMapping("addresses") // nome da rota
 public class AddressController {
 
     private final AddressService service;
 
-    public AddressController(AddressService service) {
+    public AddressController(AddressService service) { // inejeção do service
         this.service = service;
     }
 

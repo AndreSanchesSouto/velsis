@@ -8,6 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Entidade de domínio que representa a tabela de usuários ("users") no banco de dados.
+ * Mapeia as credenciais de autenticação (login, senha criptografada), nome e perfil de acesso (Role).
+ * Estabelece um relacionamento de um para muitos (OneToMany) com a entidade de endereços (AddressEntity),
+ * gerenciando o ciclo de vida dos endereços de forma cascateada (CascadeType.ALL e orphanRemoval).
+ * Possui suporte para auditoria de criação automática, controle de exclusão lógica (soft delete) pelo campo deletedAt
+ * e metodo utilitário para checagem de permissões administrativas.
+ */
 @Table(name = "users")
 @Entity
 public class UserEntity {

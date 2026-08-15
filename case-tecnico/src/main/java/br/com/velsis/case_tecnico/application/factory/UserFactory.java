@@ -7,6 +7,13 @@ import br.com.velsis.case_tecnico.application.dto.request.PostUserRequestDTO;
 import br.com.velsis.case_tecnico.domain.entity.UserEntity;
 import br.com.velsis.case_tecnico.domain.enums.Role;
 
+/**
+ * Classe de fábrica (Factory) responsável por centralizar a lógica de criação, registro
+ * e atualização de instâncias da entidade de domínio UserEntity.
+ * Utiliza o padrão Builder para a construção isolada de objetos de usuários e incorpora
+ * um validador interno para mapear strings recebidas nas requisições HTTP para o Enum Role.
+ * Também suporta atualizações parciais de dados e fluxos específicos de auto-cadastro (register).
+ */
 public class UserFactory {
 
     private static Role roleValidator(String roleString) {

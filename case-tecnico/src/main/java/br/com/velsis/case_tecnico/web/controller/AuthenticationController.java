@@ -12,13 +12,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("authentication")
+/*
+ * Aqui está localizado o Controlelr de Authentication, basicamente ele é o responsável por receber as chamadas
+ * REST e envia essa requisição ao AuthenticationService, para que nele seja feito a lógica para responder a chamada.
+ * Aqui tem somente POST.
+ * */
+@RestController // injeta como controller no spring
+@RequestMapping("authentication") // nome da rota
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    public AuthenticationController(AuthenticationService authenticationService) {
+    public AuthenticationController(AuthenticationService authenticationService) { // inejeção do service
         this.authenticationService = authenticationService;
     }
 

@@ -2,6 +2,12 @@ package br.com.velsis.case_tecnico.application.builder;
 
 import br.com.velsis.case_tecnico.domain.entity.AddressEntity;
 
+/**
+ * Classe utilitária que implementa o padrão de projeto Builder para a criação fluente
+ * e encapsulada de instâncias da entidade de domínio AddressEntity.
+ * Permite a construção passo a passo de um objeto de endereço através do encadeamento de métodos,
+ * facilitando a leitura do código e garantindo a correta atribuição de dados antes da instanciação final.
+ */
 public class AddressBuilder {
 
     private String street;
